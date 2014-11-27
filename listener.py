@@ -53,7 +53,8 @@ try :
 
       else:
       	sys.stdout.write(str(i) + "/" + str(total_packets) + "\n")
-      	fh.write(data[27:])
+            data_end_offset = data.find("\x01\x02\x03\x04")
+      	fh.write(data[27:data_end_offset])
       	i += 1
 
 except KeyboardInterrupt :
