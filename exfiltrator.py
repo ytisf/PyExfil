@@ -49,7 +49,7 @@ seq_id = seq_id + 1
 
 # Split the file and send it									
 for i in range(1,x+2):							 
-	str_send = stri[MAX_BYTES_IN_PACKET*(i-1): MAX_BYTES_IN_PACKET*i]				 
+	str_send = stri[MAX_BYTES_IN_PACKET*(i-1): MAX_BYTES_IN_PACKET*i] + "\x01\x02\x03\x04"
 	icmp.contains(ImpactPacket.Data(str_send)) # fill ICMP DATA field
 	ip.contains(icmp) # encapsulate ICMP packet in the IP packet	 
 	seq_id = seq_id + 1
