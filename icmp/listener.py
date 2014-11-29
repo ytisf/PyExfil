@@ -9,7 +9,7 @@ SKIP = 27
 
 sys.stdout.write("Starting listener.\n")
 try:
-	# Open a raw socket listening on all ip addresses
+	# Open a raw socket listening on all IP addresses but only for ICMP
 	sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
 	sock.bind(('', 1))
 	sys.stdout.write("Now listening...\n")
@@ -52,6 +52,8 @@ try:
 			continue
 
 		else:
+			# ToDo:
+			# We really need to actually check for the terminator and not just send it ya'damb ass!
 			sys.stdout.write(str(i) + "/" + str(total_packets) + "\n")
 			data_end_offset = data.find("\x01\x02\x03\x04")
 		fh.write(data[27:data_end_offset])
