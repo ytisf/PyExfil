@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 'Development Status :: 2 - Pre-Alpha',
                 'Intended Audience :: Developers',
                 'Intended Audience :: Science/Research',
-                'License :: OSI Approved :: GNU GPLv3',
+                'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
                 'Topic :: Software Development',
                 'Topic :: Scientific/Engineering',
                 'Environment :: Console',
