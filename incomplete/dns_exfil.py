@@ -117,22 +117,23 @@ def dns_server(host="demo.morirt.com", port=53, play_dead=True):
 
 	# Will keep connection alive as needed
 	while 1:
-		# Todo: Here be done data analysis of incoming traffic
+		# Todo: Here be done data analysis of incoming traffic. Need to finish server
+		pass
 		# receive data from client (data, addr)
-		d = s.recvfrom(1024)
-		data = d[0]
-		addr = d[1]
-
-		if not data:
-			# No damn data
-			pass
-
-		print data
-
-		reply = 'OK...' + data
-
-		s.sendto(reply, addr)
-		print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
+		# d = s.recvfrom(1024)
+		# data = d[0]
+		# addr = d[1]
+		#
+		# if not data:
+		# 	# No damn data
+		# 	pass
+		#
+		# print data
+		#
+		# reply = 'OK...' + data
+		#
+		# s.sendto(reply, addr)
+		# print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
 
 	s.close()
 	return 0
