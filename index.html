@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pyexfil by ytisf</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Pyexfil</h1>
+        <p class="header">A couple of beta stage tools for data exfiltration</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/ytisf/PyExfil/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/ytisf/PyExfil/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/ytisf/PyExfil">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/ytisf">ytisf</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a id="pyexfil" class="anchor" href="#pyexfil" aria-hidden="true"><span class="octicon octicon-link"></span></a>PyExfil</h1>
+
+<h2>
+<a id="abstract" class="anchor" href="#abstract" aria-hidden="true"><span class="octicon octicon-link"></span></a>Abstract</h2>
+
+<p>This started as a PoC project but has later turned into something a bit more. Currently it's an Alpha-Alpha stage package, not yet tested (and will appriciate any feedbacks and commits) designed to show several techniques of data exfiltration is real world scenarios. Currently here are what the package supports and what is allows is:</p>
+
+<ul>
+<li>DNS query.</li>
+<li>HTTP Cookie.</li>
+<li>ICMP (8).</li>
+</ul>
+
+<p>Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. 
+The release of Symantec's Regin research was the initiator of this module. It is inspired by some of the features of <a href="http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance">Regi</a>. Go read about it :)</p>
+
+<h2>
+<a id="techniques" class="anchor" href="#techniques" aria-hidden="true"><span class="octicon octicon-link"></span></a>Techniques</h2>
+
+<h3>
+<a id="dns" class="anchor" href="#dns" aria-hidden="true"><span class="octicon octicon-link"></span></a>DNS</h3>
+
+<p>This will allow establish of a listener on a DNS server to grab incoming DNS queries. It will then harvest them for files exfiltrated by the client. It <strong>does not</strong> yet allow simultaneous connections and transfers. DNS packets will look good to most listeners and <em>Wireshark</em> and <em>tcpdump</em> (which are the ones that have been tested) will show normal packet and not a 'malformed packet' or anything like that.</p>
+
+<h3>
+<a id="http-cookie" class="anchor" href="#http-cookie" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTTP Cookie</h3>
+
+<p>Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter. </p>
+
+<h3>
+<a id="icmp" class="anchor" href="#icmp" aria-hidden="true"><span class="octicon octicon-link"></span></a>ICMP</h3>
+
+<p>Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplements ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet. </p>
+
+<h2>
+<a id="future-stuff" class="anchor" href="#future-stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future Stuff</h2>
+
+<h3>
+<a id="version-alpha" class="anchor" href="#version-alpha" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version Alpha</h3>
+
+<ul>
+<li>[ ] Check why HTTP Cookie exfiltration keeps failing CRC checks.</li>
+<li>[ ] Add NTP exfiltration. (Thanks to barachy for the idea)</li>
+<li>[ ] Write a proper Documentation.</li>
+<li>[ ] Fix that poorly written <em>setup.py</em>.</li>
+</ul>
+
+<h3>
+<a id="version-beta" class="anchor" href="#version-beta" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version Beta</h3>
+
+<ul>
+<li>[ ] Enable simultaneous support for all data exfiltration methods. </li>
+<li>[ ] Translate module to C Windows.</li>
+<li>[ ] Translate module to C Linux.</li>
+<li>[ ] Get a damn logo :)</li>
+</ul>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-53267734-7");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
