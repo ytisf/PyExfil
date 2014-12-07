@@ -21,13 +21,13 @@ Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplements 
 
 ## Future Stuff
 ### Version Alpha
-[] Check why HTTP Cookie exfiltration keeps failing CRC checks.
-[] Add NTP exfiltration. (Thanks to barachy for the idea)
-[] Write a proper Documentation.
-[] Fix that poorly written *setup.py*.
+[ ] Check why HTTP Cookie exfiltration keeps failing CRC checks.
+[ ] Add NTP exfiltration. (Thanks to barachy for the idea)
+[ ] Write a proper Documentation.
+[ ] Fix that poorly written *setup.py*.
 
 ### Version Beta
-[] Enable simultaneous support for all data exfiltration methods. 
-[] Translate module to C Windows.
-[] Translate module to C Linux.
-[] Get a damn logo :)
+[ ] Enable simultaneous support for all data exfiltration methods. 
+[ ] Translate module to C Windows.
+[ ] Translate module to C Linux.
+[ ] Get a damn logo :)
