@@ -24,6 +24,7 @@ Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented
 ### Version Alpha
 - [ ] Check why HTTP Cookie exfiltration keeps failing CRC checks.
 - [X] Add NTP exfiltration. (Thanks to barachy for the idea)
+- [X] Complete NTP listener.
 - [ ] Write a proper Documentation.
 - [ ] Fix that poorly written *setup.py*.
 - [ ] More QA needed and fast!

