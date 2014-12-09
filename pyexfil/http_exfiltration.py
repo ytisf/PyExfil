@@ -62,10 +62,10 @@ def send_file(addr, file_path, max_packet_size=1200, time_delay=0.05):
 	chunks = []
 	IamDone = ""
 
-	IamDone = base64.b64encode(iAmFile)  # Base64 Encode for ASCII
-	checksum = zlib.crc32(IamDone)  # Calculate CRC32 for later verification
+	IamDone = base64.b64encode(iAmFile)                                                         # Base64 Encode for ASCII
+	checksum = zlib.crc32(IamDone)                                                              # Calculate CRC32 for later verification
 	chunks = [IamDone[i:i + max_packet_size] for i in range(0, len(IamDone), max_packet_size)]  # Split into chunks
-	head, tail = os.path.split(file_path)  # Get filename
+	head, tail = os.path.split(file_path)                                                       # Get filename
 
 	# Initial packet:
 	try:

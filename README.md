@@ -17,14 +17,15 @@ This will allow establish of a listener on a DNS server to grab incoming DNS que
 ### HTTP Cookie
 Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter. 
 ### ICMP
-Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplements ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet. 
+Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet. 
 
 ## Future Stuff
 ### Version Alpha
 - [ ] Check why HTTP Cookie exfiltration keeps failing CRC checks.
-- [ ] Add NTP exfiltration. (Thanks to barachy for the idea)
+- [X] Add NTP exfiltration. (Thanks to barachy for the idea)
 - [ ] Write a proper Documentation.
 - [ ] Fix that poorly written *setup.py*.
+- [ ] More QA needed and fast!
 
 ### Version Beta
 - [ ] Enable simultaneous support for all data exfiltration methods. 
