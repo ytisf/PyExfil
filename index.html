@@ -42,6 +42,7 @@
 <li>DNS query.</li>
 <li>HTTP Cookie.</li>
 <li>ICMP (8).</li>
+<li>NTP requests.</li>
 </ul>
 
 <p>Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. 
@@ -63,7 +64,7 @@ The release of Symantec's Regin research was the initiator of this module. It is
 <h3>
 <a id="icmp" class="anchor" href="#icmp" aria-hidden="true"><span class="octicon octicon-link"></span></a>ICMP</h3>
 
-<p>Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplements ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet. </p>
+<p>Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet. </p>
 
 <h2>
 <a id="future-stuff" class="anchor" href="#future-stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future Stuff</h2>
@@ -73,9 +74,11 @@ The release of Symantec's Regin research was the initiator of this module. It is
 
 <ul>
 <li>[ ] Check why HTTP Cookie exfiltration keeps failing CRC checks.</li>
-<li>[ ] Add NTP exfiltration. (Thanks to barachy for the idea)</li>
+<li>[X] Add NTP exfiltration. (Thanks to barachy for the idea)</li>
+<li>[X] Complete NTP listener.</li>
 <li>[ ] Write a proper Documentation.</li>
 <li>[ ] Fix that poorly written <em>setup.py</em>.</li>
+<li>[ ] More QA needed and fast!</li>
 </ul>
 
 <h3>
