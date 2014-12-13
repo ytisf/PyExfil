@@ -34,3 +34,7 @@ Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented
 - [ ] Translate module to C Windows.
 - [ ] Translate module to C Linux.
 - [ ] Get a damn logo :)
+
+## Thanks
+Thanks [Wireshark](http://wireshark.com/) for your awesome wiki and tool. Especially [packet dumps](http://wiki.wireshark.org/SampleCaptures).
+Thanks to barachy and AM for ideas on protocols to use. 
