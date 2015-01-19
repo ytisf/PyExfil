@@ -128,8 +128,7 @@ def listen(local_addr, local_port=80):
 
 	# Main work starts here
 	while True:
-		packet = s.recvfrom(65565)
-		packet = packet[0]
+		packet, address = s.recvfrom(65565)
 		eth_length = 14
 
 		eth_header = packet[:eth_length]
@@ -137,7 +136,7 @@ def listen(local_addr, local_port=80):
 		eth_protocol = socket.ntohs(eth[2])
 
 		# Parse IP packets, IP Protocol number = 8
-		if eth_protocol == 8:
+		if eth_protocol == 8 and address[2] == 4: # Cancel out duplicates
 			# Parse IP header
 			ip_header = packet[eth_length:20 + eth_length]  # 20 first chars are IP Header
 			iph = unpack('!BBHHHBBH4s4s', ip_header)  # Unpacking IP Header
