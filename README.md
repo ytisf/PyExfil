@@ -23,7 +23,7 @@ Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented
 
 ## Future Stuff
 ### Version Alpha
-- [ ] Check why HTTP Cookie exfiltration keeps failing CRC checks.
+- [X] Check why HTTP Cookie exfiltration keeps failing CRC checks. (Fixed in patch #7 by Sheksa)
 - [X] Add NTP exfiltration. (Thanks to barachy for the idea)
 - [X] Complete NTP listener.
 - [X] BGP Data exfiltration + listener.
