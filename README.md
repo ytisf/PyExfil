@@ -8,6 +8,7 @@ This started as a PoC project but has later turned into something a bit more. Cu
 * ICMP (8).
 * NTP requests.
 * BGP Open.
+* POP3 Authentication (as password) - Thanks to iKotler
 
 Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. You can track changes at the official [GitHub page](http://ytisf.github.io/PyExfil/).
 The release of Symantec's Regin research was the initiator of this module. It is inspired by some of the features of [Regin](http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance). Go read about it :)
