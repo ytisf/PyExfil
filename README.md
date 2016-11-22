@@ -21,10 +21,29 @@ The release of Symantec's Regin research was the initiator of this module. It is
 This will allow establish of a listener on a DNS server to grab incoming DNS queries. It will then harvest them for files exfiltrated by the client. It **does not** yet allow simultaneous connections and transfers. DNS packets will look good to most listeners and *Wireshark* and *tcpdump* (which are the ones that have been tested) will show normal packet and not a 'malformed packet' or anything like that.
 
 ### HTTPS Replace certificate
-With this method you are configuring an HTTP server to impersonate the certificate. When you exfiltrate data, it will use the original server to exchange certificates with the duplicating server (port forwarding) and then, when this is complete, transmit the data with AES encryption but wraps it up as SSL Application Data as there is no real way of telling this. 
+With this method you are configuring an HTTP server to impersonate the certificate. When you exfiltrate data, it will use the original server to exchange certificates with the duplicating server (port forwarding) and then, when this is complete, transmit the data with AES encryption but wraps it up as SSL Application Data as there is no real way of telling this.
 
 ### HTTP Cookie
 Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter.
+
+#### Server Setup
+```python
+from pyexfil.HTTPS.https_server import HTTPSExfiltrationServer
+
+server = HTTPSExfiltrationServer(host="127.0.0.1", key="123", port=443, max_connections=5, max_size=8192)
+server.startlistening()
+```
+
+#### Client Setup
+```python
+from pyexfil.HTTPS.https_client import HTTPSExfiltrationClient
+
+client = HTTPSExfiltrationClient(host='127.0.0.1', key="123", port=443, max_size=8192)
+client.sendData("ABC")
+client.sendData("DEFG")
+client.close()
+```
+
 
 ### ICMP
 Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet.
