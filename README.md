@@ -8,6 +8,7 @@ This started as a PoC project but has later turned into something a bit more. Cu
 * ICMP (8).
 * NTP requests.
 * BGP Open.
+* HTTPS Replace Certificate
 * POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
 * FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
 
@@ -18,13 +19,20 @@ The release of Symantec's Regin research was the initiator of this module. It is
 
 ### DNS
 This will allow establish of a listener on a DNS server to grab incoming DNS queries. It will then harvest them for files exfiltrated by the client. It **does not** yet allow simultaneous connections and transfers. DNS packets will look good to most listeners and *Wireshark* and *tcpdump* (which are the ones that have been tested) will show normal packet and not a 'malformed packet' or anything like that.
+
+### HTTPS Replace certificate
+With this method you are configuring an HTTP server to impersonate the certificate. When you exfiltrate data, it will use the original server to exchange certificates with the duplicating server (port forwarding) and then, when this is complete, transmit the data with AES encryption but wraps it up as SSL Application Data as there is no real way of telling this. 
+
 ### HTTP Cookie
 Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter.
+
 ### ICMP
 Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet.
+
 ### FTP MKDIR
 FTP MKDIR is a technique based on using an FTP server and assuming that the corporate is using an active MiTM to disable file upload. With this in mind, the file is then compressed using `zlib` and base64 encoded (to be ASCII representable) and then splitted into chunks. Each chunk is then made the name of a directory using MKDIR command (which is not a file upload and should be enabled).
 It can be used in the following manner:
+
 #### File Exfil
 ```python
 # Port is by default 21, but can be changed with 'port=2121'
@@ -50,11 +58,13 @@ FTPHand.get_file()
 - [X] Complete NTP listener.
 - [X] BGP Data exfiltration + listener.
 - [X] FTP MKDIR Exfiltrator & combiner.
-- [ ] Write a proper Documentation.
-- [ ] Fix that poorly written *setup.py*.
-- [ ] More QA needed and fast!
 
 ### Version Beta
+- [x] More QA needed and fast!
+- [ ] Write a proper Documentation.
+- [ ] Fix that poorly written *setup.py*.
+
+### Version 1.0
 - [ ] Enable simultaneous support for all data exfiltration methods.
 - [ ] Translate module to C Windows.
 - [ ] Translate module to C Linux.
