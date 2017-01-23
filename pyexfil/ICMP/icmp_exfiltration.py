@@ -186,7 +186,7 @@ def init_listener(ip_addr, saving_location="."):
 			else:
 				log_fh.write("Got termination packet for %s\n" % man_array[0])
 				comp_crc = zlib.crc32(current_file)
-				if True:#str(comp_crc) == checksum:
+				if str(comp_crc) == checksum:
 					# CRC validated
 					log_fh.write("CRC validation is green for " + str(comp_crc) + " with file name: " + filename + "\n")
 					current_file = base64.b64decode(current_file)
