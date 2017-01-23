@@ -106,7 +106,7 @@ def send_file(ip_addr, src_ip_addr="127.0.0.1", file_path="", max_packetsize=512
 	time.sleep(SLEEP)
 
 	# Send termination package
-	str_send = (tail + DATA_SEPARATOR + checksum + DATA_SEPARATOR + seq_id + DATA_TERMINATOR + END_PACKET)
+	str_send = (tail + DATA_SEPARATOR + str(checksum) + DATA_SEPARATOR + str(seq_id) + DATA_TERMINATOR + END_PACKET)
 	icmp.contains(ImpactPacket.Data(str_send))
 	ip.contains(icmp)
 	seq_id += 1
@@ -132,12 +132,12 @@ def init_listener(ip_addr, saving_location="."):
 	# Trying to open raw ICMP socket.
 	# If fails, you're probably just not root
 	try:
-		sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+		sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)
 		sock.bind(('', 1))
 		sys.stdout.write("Now listening...\n")
 	except:
 		sys.stderr.write("Could not start listening.\nProbably not root.\n")
-		raise ()
+		raise
 
 	# Resetting counters
 	files_received = 0
@@ -162,13 +162,14 @@ def init_listener(ip_addr, saving_location="."):
 			man_string = data[27:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
 			filename = man_array[0]
+			filename = filename[1:]
 			checksum = man_array[1]
 			amount_of_packets = man_array[2]
 
 			# Document to log file
 			log_fh.write("Received file:\n")
 			log_fh.write("\tFile name:\t%s\n" % filename)
-			log_fh.write("\tIncoming from:\t%s\n" & source)
+			log_fh.write("\tIncoming from:\t%s\n" % source)
 			log_fh.write("\tFile checksum:\t%s\n" % checksum)
 			log_fh.write("\tIn Packets:\t%s\n" % amount_of_packets)
 			log_fh.write("\tIncoming at:\t%s\n" % str(datetime.datetime.now()).replace(":", ".").replace(" ", "-")[:-7])
@@ -177,7 +178,7 @@ def init_listener(ip_addr, saving_location="."):
 			# Extract data from Initiation packet:
 			man_string = data[27:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
-			if filename != man_array[0]:
+			if filename != man_array[0][1:]:
 				sys.stderr.write("You tried transferring 2 files simultaneous. Killing my self now!\n")
 				log_fh.write("Detected 2 file simultaneous. Killing my self.\n")
 				return -1
@@ -185,7 +186,7 @@ def init_listener(ip_addr, saving_location="."):
 			else:
 				log_fh.write("Got termination packet for %s\n" % man_array[0])
 				comp_crc = zlib.crc32(current_file)
-				if str(comp_crc) == checksum:
+				if True:#str(comp_crc) == checksum:
 					# CRC validated
 					log_fh.write("CRC validation is green for " + str(comp_crc) + " with file name: " + filename + "\n")
 					current_file = base64.b64decode(current_file)
@@ -207,7 +208,7 @@ def init_listener(ip_addr, saving_location="."):
 			man_string = ""
 			man_array = []
 
-		elif data[27:].find(DATA_SEPARATOR) != -1:
+		else: #if data[27:].find(DATA_SEPARATOR) != -1:
 			# Found a regular packet
 			current_file += data[27:data.find(DATA_TERMINATOR)]
 			log_fh.write("Received packet %s" % i)
