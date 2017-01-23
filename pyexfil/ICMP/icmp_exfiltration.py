@@ -157,12 +157,11 @@ def init_listener(ip_addr, saving_location="."):
 		ips = ip_header[-8:-4]
 		source = "%i.%i.%i.%i" % (ord(ips[0]), ord(ips[1]), ord(ips[2]), ord(ips[3]))
 
-		if data[27:].find(INIT_PACKET) != -1:
+		if data[28:].find(INIT_PACKET) != -1:
 			# Extract data from Initiation packet:
-			man_string = data[27:]                              # String to manipulate
+			man_string = data[28:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
 			filename = man_array[0]
-			filename = filename[1:]
 			checksum = man_array[1]
 			amount_of_packets = man_array[2]
 
@@ -174,11 +173,11 @@ def init_listener(ip_addr, saving_location="."):
 			log_fh.write("\tIn Packets:\t%s\n" % amount_of_packets)
 			log_fh.write("\tIncoming at:\t%s\n" % str(datetime.datetime.now()).replace(":", ".").replace(" ", "-")[:-7])
 
-		elif data[27:].find(END_PACKET) != -1:
+		elif data[28:].find(END_PACKET) != -1:
 			# Extract data from Initiation packet:
-			man_string = data[27:]                              # String to manipulate
+			man_string = data[28:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
-			if filename != man_array[0][1:]:
+			if filename != man_array[0]:
 				sys.stderr.write("You tried transferring 2 files simultaneous. Killing my self now!\n")
 				log_fh.write("Detected 2 file simultaneous. Killing my self.\n")
 				return -1
@@ -208,9 +207,9 @@ def init_listener(ip_addr, saving_location="."):
 			man_string = ""
 			man_array = []
 
-		else: #if data[27:].find(DATA_SEPARATOR) != -1:
+		elif data[28:].find(DATA_TERMINATOR) != -1:
 			# Found a regular packet
-			current_file += data[27:data.find(DATA_TERMINATOR)]
+			current_file += data[28:data.find(DATA_TERMINATOR)]
 			log_fh.write("Received packet %s" % i)
 			i += 1
 
