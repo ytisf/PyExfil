@@ -55,7 +55,7 @@ def send_file(ip_addr, src_ip_addr="127.0.0.1", file_path="", max_packetsize=512
 
 	# ICMP on top of IP
 	icmp = ImpactPacket.ICMP()
-	icmp.set_icmp_type(icmp.ICMP_ECHOREPLY)
+	icmp.set_icmp_type(icmp.ICMP_ECHO)
 
 	seq_id = 0
 
@@ -157,7 +157,11 @@ def init_listener(ip_addr, saving_location="."):
 		ips = ip_header[-8:-4]
 		source = "%i.%i.%i.%i" % (ord(ips[0]), ord(ips[1]), ord(ips[2]), ord(ips[3]))
 
-		if data[28:].find(INIT_PACKET) != -1:
+		# Ignore everything but ECHO requests
+		if data[20] != "\x08":
+			pass
+
+		elif data[28:].find(INIT_PACKET) != -1:
 			# Extract data from Initiation packet:
 			man_string = data[28:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
