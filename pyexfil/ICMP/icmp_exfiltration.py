@@ -210,7 +210,7 @@ def init_listener(ip_addr, saving_location="."):
 		elif data[28:].find(DATA_TERMINATOR) != -1:
 			# Found a regular packet
 			current_file += data[28:data.find(DATA_TERMINATOR)]
-			log_fh.write("Received packet %s" % i)
+			log_fh.write("Received packet %s" % i + "\n")
 			i += 1
 
 
