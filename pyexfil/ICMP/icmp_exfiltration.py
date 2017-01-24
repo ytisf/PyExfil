@@ -106,7 +106,7 @@ def send_file(ip_addr, src_ip_addr="127.0.0.1", file_path="", max_packetsize=512
 	time.sleep(SLEEP)
 
 	# Send termination package
-	str_send = (tail + DATA_SEPARATOR + checksum + DATA_SEPARATOR + seq_id + DATA_TERMINATOR + END_PACKET)
+	str_send = (tail + DATA_SEPARATOR + str(checksum) + DATA_SEPARATOR + str(seq_id) + DATA_TERMINATOR + END_PACKET)
 	icmp.contains(ImpactPacket.Data(str_send))
 	ip.contains(icmp)
 	seq_id += 1
@@ -132,12 +132,12 @@ def init_listener(ip_addr, saving_location="."):
 	# Trying to open raw ICMP socket.
 	# If fails, you're probably just not root
 	try:
-		sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+		sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)
 		sock.bind(('', 1))
 		sys.stdout.write("Now listening...\n")
 	except:
 		sys.stderr.write("Could not start listening.\nProbably not root.\n")
-		raise ()
+		raise
 
 	# Resetting counters
 	files_received = 0
@@ -157,9 +157,9 @@ def init_listener(ip_addr, saving_location="."):
 		ips = ip_header[-8:-4]
 		source = "%i.%i.%i.%i" % (ord(ips[0]), ord(ips[1]), ord(ips[2]), ord(ips[3]))
 
-		if data[27:].find(INIT_PACKET) != -1:
+		if data[28:].find(INIT_PACKET) != -1:
 			# Extract data from Initiation packet:
-			man_string = data[27:]                              # String to manipulate
+			man_string = data[28:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
 			filename = man_array[0]
 			checksum = man_array[1]
@@ -168,14 +168,14 @@ def init_listener(ip_addr, saving_location="."):
 			# Document to log file
 			log_fh.write("Received file:\n")
 			log_fh.write("\tFile name:\t%s\n" % filename)
-			log_fh.write("\tIncoming from:\t%s\n" & source)
+			log_fh.write("\tIncoming from:\t%s\n" % source)
 			log_fh.write("\tFile checksum:\t%s\n" % checksum)
 			log_fh.write("\tIn Packets:\t%s\n" % amount_of_packets)
 			log_fh.write("\tIncoming at:\t%s\n" % str(datetime.datetime.now()).replace(":", ".").replace(" ", "-")[:-7])
 
-		elif data[27:].find(END_PACKET) != -1:
+		elif data[28:].find(END_PACKET) != -1:
 			# Extract data from Initiation packet:
-			man_string = data[27:]                              # String to manipulate
+			man_string = data[28:]                              # String to manipulate
 			man_array = man_string.split(DATA_SEPARATOR)        # Exploit data into array
 			if filename != man_array[0]:
 				sys.stderr.write("You tried transferring 2 files simultaneous. Killing my self now!\n")
@@ -207,9 +207,9 @@ def init_listener(ip_addr, saving_location="."):
 			man_string = ""
 			man_array = []
 
-		elif data[27:].find(DATA_SEPARATOR) != -1:
+		elif data[28:].find(DATA_TERMINATOR) != -1:
 			# Found a regular packet
-			current_file += data[27:data.find(DATA_TERMINATOR)]
+			current_file += data[28:data.find(DATA_TERMINATOR)]
 			log_fh.write("Received packet %s" % i)
 			i += 1
 
