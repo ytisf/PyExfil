@@ -3,7 +3,7 @@
 
 __author__ = 'Yuval tisf Nativ'
 __license__ = 'GPLv3'
-__copyright__ = '2014, Yuval tisf Nativ'
+__copyright__ = '2016, Yuval tisf Nativ'
 
 import os
 
@@ -13,7 +13,7 @@ except ImportError:
     from distutils.core import setup
 
 
-required = ['requests>=1.0.0', 'impacket>=0.9.0']
+required = ['requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar', 'zlib']
 
 if __name__ == '__main__':
     if os.path.exists('MANIFEST'):

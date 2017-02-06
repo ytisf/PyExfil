@@ -1,0 +1,7 @@
+PIL
+qrcode
+wand
+SimpleCV
+pygame
+cv2
+zbarlight

