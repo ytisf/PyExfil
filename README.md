@@ -3,16 +3,22 @@
 ## Abstract
 This started as a PoC project but has later turned into something a bit more. Currently it's an Alpha-Alpha stage package, not yet tested (and will appriciate any feedbacks and commits) designed to show several techniques of data exfiltration is real world scenarios. Currently here are what the package supports and what is allows is:
 
-* DNS query.
-* HTTP Cookie.
-* ICMP (8).
-* NTP requests.
-* BGP Open.
-* HTTPS Replace Certificate.
-* QUIC - No Certificate.
-* Slack Exfiltration
-* POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
-* FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
+* Network
+  * DNS query.
+  * HTTP Cookie.
+  * ICMP (8).
+  * NTP requests.
+  * BGP Open.
+  * HTTPS Replace Certificate.
+  * QUIC - No Certificate.
+  * Slack Exfiltration
+  * POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
+  * FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
+* Physical
+  * Audio
+  * QR Codes
+* Steganography
+  * Binary Offset
 
 Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. You can track changes at the official [GitHub page](http://ytisf.github.io/PyExfil/).
 The release of Symantec's Regin research was the initiator of this module. It is inspired by some of the features of [Regin](http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance). Go read about it :)
