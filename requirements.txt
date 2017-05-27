@@ -6,3 +6,5 @@ zlib
 base64
 hashlib
 urllib2
+numpy
+PIL

