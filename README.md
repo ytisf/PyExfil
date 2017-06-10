@@ -19,6 +19,7 @@ This started as a PoC project but has later turned into something a bit more. Cu
   * QR Codes
 * Steganography
   * Binary Offset
+  * Video Transcript to Dictionary
 
 Package is still not really usable and will provide multiple issues. Please wait for a more reliable version to come along. You can track changes at the official [GitHub page](http://ytisf.github.io/PyExfil/).
 The release of Symantec's Regin research was the initiator of this module. It is inspired by some of the features of [Regin](http://www.symantec.com/connect/blogs/regin-top-tier-espionage-tool-enables-stealthy-surveillance). Go read about it :)
@@ -190,6 +191,25 @@ client.close()
 ```
 
 ## Steganography
+
+### Video Dictionary
+
+This module will take as an input a file to exfiltrate and a video file. The next thing it will do is convert the file to exfiltrate into a series of `chr(byte)`. After that, it will attempt to get several frames from the video file and match each corresponding `pixels[i](r,g,b)` into each of the 0-255 possible bytes. It will then create a comressed and plain text dictionary for the original file in those images creating an output of a dictionary file with will hold a CSV with `frameindex, pixel (offset), colour_value(r/g/b)`. This dictionary is absolutely useless without the original identical video (no recompression or alterations at all).
+
+We think this technique can be particularly useful in scenarios where there are very powerful data inspections on the traffic and that the original data is very easy to detect (CC information or emails for example). Let's take the instance where the data you would like to exfiltrate for the purpose of your red-team / pentest purpose is plain text credit cards and that traffic is thoroughly inspected while blocking any type of binary/encrypted data form. Basically a very restrictive white-list based traffic rules for example.
+
+Since the output of this module will be a CSV dictionary which will contain none of the original data in anyway, one can ZIP it (we used zlib) and get a fairly decent compression rate, while if anyone would like to examine the CSV file (which will be easily recoverable) one could always add any headers they would like and get a reasonable CSV that is easy to maintaine feasability of its use.
+
+To make stuff easier, we've added a functionality to download a video from YouTube with a specific quality and frame to make sure one could use it without actually transferring the video file from one end to the other.
+
+#### Usage
+
+```python
+from pyexfil.Stega.video_dict.vid_to_dict import TranscriptData, DecodeDictionary
+
+TranscriptData(video_file="video.mp4", input_file="/etc/passwd", output_index="output.map")
+DecodeDictionary(originalVideo="video.mp4", dictionaryFile='output.map', outputFile="original_passwd")
+```
 
 ### Binary Offset
 
