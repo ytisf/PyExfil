@@ -1,0 +1,8 @@
+title: PyExfil
+description: A couple of beta stage tools for data exfiltration
+google_analytics: UA-53267734-7
+show_downloads: true
+theme: jekyll-theme-slate
+
+gems:
+  - jekyll-mentions
