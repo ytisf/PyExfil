@@ -85,4 +85,4 @@ def PacketHandler(pkt) :
                     continue
 
 def StartListening(adapter=ADAPTER):
-    sniff(iface=ADAPTER, prn=PacketHandler)
+    sniff(iface=adapter, prn=PacketHandler)
