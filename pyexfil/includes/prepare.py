@@ -40,7 +40,10 @@ def rc4(data, key):
 
 def _splitString(stri, length):
     """
-    Split a string to specific blocked chunks
+    Split string by a particular length.
+    :param stri: String to split
+    :param length: Length to split by, int
+    :return: List
     """
     def _f(s, n):
         while s:
@@ -49,7 +52,7 @@ def _splitString(stri, length):
     if type(length) is not int:
         sys.stderr.write("'length' parameter must be an int.\n")
         return False
-    if type(stri) is not str:
+    if type(stri) is not str and type(stri) is not bytes:
         sys.stderr.write("'stri' parameter must be an string.\n")
         return False
     return list(_f(stri, length))
@@ -79,7 +82,7 @@ def DecodePacket(packet_data, enc_key=DEFAULT_KEY, b64_flag=False):
     if encryption:
         try:
             data = rc4(data, enc_key)
-        except ValueError, e:
+        except ValueError as e:
             sys.stderr.write("Data does not decrypt using the key you've provided.\n")
             sys.stderr.write("%s\n" % e)
             return False
@@ -141,7 +144,7 @@ def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key
         f = open(file_path, 'rb')
         data = f.read()
         f.close()
-    except IOError, e:
+    except IOError as e:
         sys.stderr.write("Error opening file '%s'.\n" % file_path )
         return False
 
@@ -202,7 +205,7 @@ def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key
     # Every Packet
     i = 2
     for chunk in packetsData:
-        thisPacket = seqID + delm + str(i) + delm + chunk
+        thisPacket = "%s%s%s%s%s" % (seqID, delm, str(i), delm, chunk)
         if enc_key != "":
             thisPacket = rc4(thisPacket, enc_key)
         if kind == 'ascii':
@@ -285,7 +288,6 @@ def RebuildFile(packets_data):
         return ret
 
 
-
 """
 
 How to Use:
@@ -317,6 +319,7 @@ Joining the decoded packets into one file
 print RebuildFile(conjoint)
 
 """
+
 
 if __name__ == "__main__":
     sys.stderr.write("Not a stand alone module.\n")

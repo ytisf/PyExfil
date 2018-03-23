@@ -77,7 +77,7 @@ def send_file(addr, file_path, max_packet_size=1200, time_delay=0.05):
 		time.sleep(time_delay)
 	except:
 		sys.stderr.write("Unable to reach target with error:\n")
-		raise ()
+		sys.exit(1)
 
 	# Send data
 	current_chunk = 0

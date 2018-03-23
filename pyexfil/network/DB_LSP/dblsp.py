@@ -82,8 +82,9 @@ class DB_LSP(object):
                 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             else:
                 s.bind(('', self.port))
-    	except:
+    	except socket.error, e:
     		sys.stderr.write('Failed to create socket.\n')
+    		sys.stderr.write('%s\n' % e)
     		return False
 
         try:

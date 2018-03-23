@@ -144,6 +144,7 @@ def CreateExfiltrationFile(originalImage, rawData, OutputImage):
 
     im2 = Image.new(img.mode, (ImageWidth, ImageHeight))
     im2.putdata(FinalPixels)
+    open(OutputImage, 'wb').write("\x00") # Touching file as PIL does an append...
     im2.save(OutputImage)
     sys.stdout.write("\t[+] New image saved at '%s'.\n\n" % OutputImage)
 

@@ -5,9 +5,6 @@ import sys
 import zlib
 import time
 import base58
-import base64
-import socket
-import hexdump
 
 from ftplib import FTP
 from ftplib import FTP_TLS

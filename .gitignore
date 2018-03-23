@@ -7,3 +7,8 @@ dev_zone/
 .ropeproject/
 .idea/
 .git/
+PyExfil.egg-info/
+build/
+dist/
+__pycache__/
+*__pycache__/

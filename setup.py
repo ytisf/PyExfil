@@ -3,7 +3,7 @@
 
 __author__ = 'Yuval tisf Nativ'
 __license__ = 'GPLv3'
-__copyright__ = '2016, Yuval tisf Nativ'
+__copyright__ = '2018, Yuval tisf Nativ'
 
 import os
 
@@ -13,7 +13,10 @@ except ImportError:
     from distutils.core import setup
 
 
-required = ['requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar', 'zlib', 'numpy', 'PIL', 'pytube', 'hashlib']
+required = ['requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar', 'zlib', 'numpy', 'PIL', 'pytube', 'hashlib',
+            'urllib2', 'PyCrypto', 'ftplib', 'base58']
+            # Todo: Set that urllib2 is not installed from pip for Python3
+
 
 if __name__ == '__main__':
     if os.path.exists('MANIFEST'):
@@ -27,14 +30,14 @@ if __name__ == '__main__':
         description="""PyExfil: Python communication library over non-standard channels.""",
         license=__license__,
         url='https://www.github.com/ytisf/pyexfil',
-        version="0.0.1 Beta",
+        version="1.0 RC1",
         download_url='https://www.github.com/ytisf/pyexfil',
         long_description=long_desc,
         packages=['pyexfil'],
         install_requires=required,
         platforms='any',
         classifiers=(
-                'Development Status :: 2 - Pre-Alpha',
+                'Development Status :: 3 - Beta',
                 'Intended Audience :: Developers',
                 'Intended Audience :: Science/Research',
                 'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',

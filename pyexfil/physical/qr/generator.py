@@ -4,7 +4,6 @@ try:
     import os
     import sys
     import zlib
-    import wand
     import time
     import qrcode
     import base64
@@ -15,11 +14,13 @@ except ImportError, e:
     sys.stdout.write("Error importing something. Try 'pip install --user -r requirements'.\n%s\n" % e)
     sys.exit(1)
 
+
 # Globals
 DEFAULT_FOLDER = "pyexfil/physical/qr/outputs/"      # where QR images will be saved
 MAXIMUM_QR_SIZE = 800 - 3          # in bytes -2 for index and 1 for delimiter
 DELIMITER = ";"
 DELAY = 3
+
 
 def split2len(s, n):
     def _f(s, n):
@@ -27,6 +28,7 @@ def split2len(s, n):
             yield s[:n]
             s = s[n:]
     return list(_f(s, n))
+
 
 def CreateQRs(filename, folder=DEFAULT_FOLDER):
 
@@ -58,6 +60,7 @@ def CreateQRs(filename, folder=DEFAULT_FOLDER):
     sys.stdout.write("Saved a total of %s images.\n" % i)
     return True
 
+
 def PlayQRs(folder=DEFAULT_FOLDER):
     all_pngs = [each for each in os.listdir(folder) if each.endswith('.png')]
     if len(all_pngs) == 0:
@@ -71,6 +74,7 @@ def PlayQRs(folder=DEFAULT_FOLDER):
         i.close()
     sys.stdout.write("Finished playing images.\n")
     return True
+
 
 if __name__ == "__main__":
     if CreateQRs('/etc/passwd'):

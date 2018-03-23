@@ -7,3 +7,6 @@ numpy
 PIL
 pytube
 PyCrypto
+qrcode
+base58
+ftplib
