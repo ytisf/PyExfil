@@ -9,9 +9,6 @@ import struct
 import base64
 import hashlib
 
-from Crypto import Random
-from Crypto.Cipher import AES
-
 
 DEFAULT_KEY                 = "ShutTheFuckUpDonnie!"
 DEFAULT_MAX_PACKET_SIZE     = 65000
@@ -80,6 +77,21 @@ def DecodePacket(packet_data, enc_key=DEFAULT_KEY, b64_flag=False):
         data = packet_data
 
     if encryption:
+        if ASCII_DELIMITER in data or BINARY_DELIMITER in data:
+            # This is the first packet. Build logic here.
+            if ASCII_DELIMITER in data:
+                splitData = data.split(ASCII_DELIMITER)
+            else:
+                splitData = data.split(BINARY_DELIMITER)
+            ret['initFlag'] = True
+            ret['fileData'] = {}
+            ret['fileData']['FileName'] = splitData[0]
+            ret['fileData']['TotalPackets'] = splitData[2]
+            ret['fileData']['SequenceID'] = splitData[3]
+            ret['fileData']['MD5'] = splitData[4]
+            ret['packetNumber'] = splitData[1]
+            return ret
+            
         try:
             data = rc4(data, enc_key)
         except ValueError as e:
@@ -93,7 +105,7 @@ def DecodePacket(packet_data, enc_key=DEFAULT_KEY, b64_flag=False):
         splitData = data.split(BINARY_DELIMITER)
 
     if len(splitData) == 5:
-        # Init packeta
+        # Init packet
         ret['initFlag'] = True
         ret['fileData'] = {}
         ret['fileData']['FileName'] = splitData[0]

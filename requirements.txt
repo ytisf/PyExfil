@@ -2,11 +2,13 @@ requests>=1.0.0
 impacket>=0.9.0
 slackclient
 progressbar
-urllib2
 numpy
-PIL
+pillow
 pytube
 PyCrypto
 qrcode
 base58
-ftplib
+librosa
+luhn
+names
+Faker

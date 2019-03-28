@@ -76,7 +76,7 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 	# Try and check if you can send data
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	except socket.error, msg:
+	except socket.error as msg:
 		sys.stderr.write('Failed to create socket. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 		return -1
 
