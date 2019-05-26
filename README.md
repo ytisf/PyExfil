@@ -74,6 +74,7 @@ pip setup.py --user install
 * **Steganography**
   * [Binary Offset](https://www.github.com/ytisf/PyExfil/USAGE.md#image-binary-offset)
   * [Video Transcript to Dictionary](https://www.github.com/ytisf/PyExfil/USAGE.md#video-dictionary)
+  * [Braille Text Document](https://www.github.com/ytisf/PyExfil/USAGE.md#braille-text-document)
 
 For usage per modules have a look at the [USAGE](https://www.github.com/ytisf/PyExfil/USAGE.md) file.
 
@@ -132,4 +133,5 @@ For details about version look at the [tags on this repository](https://www.gith
 - Shout out to the [nmap](https://nmap.org/) guys.
 - Thanks to [Trey Hunner](https://github.com/treyhunner) for the package [`names`](https://github.com/treyhunner/names).
 - The [Faker](https://faker.readthedocs.io/en/master/) package.
+- Special thanks to Thomas Baruchel and Fredrik de Vibe for the [txt2pdf](https://github.com/baruchel/txt2pdf) package we used in the `braille` exfiltration package.
 

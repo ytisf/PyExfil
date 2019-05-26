@@ -26,7 +26,7 @@ def file2array(file_name):
         f = open(file_name, 'rb')
         st = f.read()
         f.close()
-    except IOError, e:
+    except IOError as e:
         sys.stderr.write("\t[!] Cannot open the file '%s'.\n" % file_name)
         return False
 
@@ -193,7 +193,7 @@ def DecodeExfiltrationFile(originalImage, newImage, outputPath):
     undecodedData = rawDeStegaData.replace(str(BUFF_CHAR), "")
     for char in undecodedData:
         if char != '0' and char != '1':
-            print char
+            print(char)
 
     one_ring_to_bind_them = ''.join(undecodedData)
     bin_str = "0b" + one_ring_to_bind_them

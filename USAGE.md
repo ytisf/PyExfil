@@ -598,3 +598,24 @@ from pyexfil.Stega.video_dict.vid_to_dict import TranscriptData, DecodeDictionar
 TranscriptData(video_file="video.mp4", input_file="/etc/passwd", output_index="output.map")
 DecodeDictionary(originalVideo="video.mp4", dictionaryFile='output.map', outputFile="original_passwd")
 ```
+
+#### Braille Text Document
+This module can be very useful when you have only a printer at hand. It will try to avoid detection based on content by compressing the data, converting it to hex and then representing that in Braille to it is relatively easy to scan, use OCR and then convert back to the actual data. 
+
+```python
+#!/usr/bin/env python3
+
+from pyexfil.Stega import braille
+braille.Send(file_path='/etc/passwd', to_file=True, to_screen=False)
+```
+
+This will generate one `output.txt` file with the Braille text and one `output.pdf` file with the text aligned and ready to be printed. 
+
+To decode simply use:
+```python
+#!/usr/bin/env python3
+
+from pyexfil.Stega import braille
+data = open("output.txt", 'r').read()
+braille.Decode(data)
+```
