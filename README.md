@@ -67,6 +67,7 @@ pip setup.py --user install
   * [GQUIC](https://www.github.com/ytisf/PyExfil/USAGE.md#gquic) - [Google Quick UDP](https://www.chromium.org/quic) Internet Connections (Client Hello)
   * [MDNS Query](https://www.github.com/ytisf/PyExfil/USAGE.md#mdns-query) - *Can be used as broadcast.*
   * [AllJoyn](https://www.github.com/ytisf/PyExfil/USAGE.md#alljoyn). Name Service Protocol (IoT discovery) Version 0 ISAT.
+  * [PacketSize](https://www.github.com/ytisf/PyExfil/USAGE.md#PacketSize). Using size of packet rather than actual data.  
 * **Physical**
   * [Audio](https://www.github.com/ytisf/PyExfil/USAGE.md#audio) - *No listener*.
   * [QR Codes](https://www.github.com/ytisf/PyExfil/USAGE.md#qr-codes)

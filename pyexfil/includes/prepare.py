@@ -9,6 +9,10 @@ import struct
 import base64
 import hashlib
 
+if sys.version_info[0] < 3:
+    PY_VER = 2
+else:
+    PY_VER = 3
 
 DEFAULT_KEY                 = "ShutTheFuckUpDonnie!"
 DEFAULT_MAX_PACKET_SIZE     = 65000
@@ -32,8 +36,10 @@ def rc4(data, key):
         S[i], S[j] = S[j], S[i]
         out.append(chr(ord(ch) ^ S[(S[i] + S[j]) % 256]))
 
-    return "".join(out)
-
+    if PY_VER is 2:
+        return "".join(out)
+    else:
+        return bytes("".join(out), 'utf-8')
 
 def _splitString(stri, length):
     """
@@ -226,6 +232,58 @@ def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key
             ret['Packets'].append(thisPacket)
         thisPacket = ""
         i += 1
+
+    return ret
+
+
+def PrepString(data, max_size=DEFAULT_MAX_PACKET_SIZE, enc_key=DEFAULT_KEY, compress=True):
+    '''
+    PrepFile creats a file ready for sending and return an object.
+    :param data: string, data to be exfiltrated.
+    :param max_size: integer, default=6500, max amount of data per packet.
+    :param enc_key: string, key for AES encryption. if key is empty string,
+                    no encryption will be done. Reduces size of packets.
+                    Default key is 'ShutTheFuckUpDonnie!'
+    :returns: dictionary with data and 'Packets' as list of packets for
+                exfiltration sorted by order.
+    '''
+    ret = {}
+    
+    # Compute hashes and other meta data
+    hash_raw = hashlib.md5(data).hexdigest()
+    if enc_key != "":
+        ret['Key'] = enc_key
+        ret['EncryptionFlag'] = True
+    else:
+        ret['EncryptionFlag'] = False
+        
+    if PY_VER is 3:
+        if type(enc_key) is bytes:
+            enc_key = enc_key.decode("utf-8")
+        if type(data) is bytes:
+            data = data.decode("utf-8")
+        
+    if enc_key is None:
+        compData = bytes(data, 'utf-8')
+    else:
+        compData = rc4(data, enc_key)
+    
+    if compress:
+        compData = zlib.compress(compData)
+        compData = base64.b85encode(compData)
+    hash_compressed = hashlib.md5(compData).hexdigest()
+    ret['FilePath'] = None
+    ret['ChunksSize'] = max_size
+    ret['FileName'] = None
+    ret['RawHash'] = hash_raw
+    ret['CompressedHash'] = hash_compressed
+    ret['CompressedSize'] = len(compData)
+    ret['RawSize'] = len(data)
+
+    packetsData = _splitString(compData, max_size)
+    ret['PacketsCount'] = len(packetsData) + 1
+    ret['FileSequenceID'] = random.randint(1024,4096)
+    ret['Packets'] = packetsData
 
     return ret
 
