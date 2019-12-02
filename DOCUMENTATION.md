@@ -6,6 +6,7 @@ Please notice that although we have tried to keep this a collection of relativel
 You can use it in the following way:
 
 ```python
+import socket
 from pyexfil.includes.prepare import PrepFile, RebuildFile, DecodePacket
 
 proc = PrepFile('/etc/passwd', kind='binary') # will yield a dictionary
@@ -24,7 +25,7 @@ for packet in proc['Packets']:
     conjoint.append(b)
 
 # Verify and rebuild the file:
-print RebuildFile(conjoint)
+print(RebuildFile(conjoint))
 ```
 
 ## Calling Convention
@@ -40,10 +41,11 @@ In theory we wish each module to have a convention call to make it easier to wor
 Here's an `__ini__.py` example file:
 
 ```python
+from scapy.all import *
 from pyexfil.includes.prepare import PrepFile, RebuildFile, DecodePacket
 
 def _send_packet(host, port, data, counter):
-  open('/dev/null', 'w').write(data, counter)
+  open('/dev/null', 'w').write("%s%s" % (data, counter))
 
 def _testCallBack(pkt):
   print("Me got a pkt! [%s]" % len(pkt))
@@ -52,7 +54,7 @@ def Send(fname, password, host, port):
   proc = PrepFile(fname, kind='binary', enc_key=password, max_size=1024)
   i = 0
   for p in proc['Packets']:
-    _send(host, port, p, i)
+    _send_packet(host, port, p, i)
     i += 1
   return True
 
@@ -72,3 +74,5 @@ class Broker():
     while True:
       sniff(ptn=self._parse, filter='stam', store=0, count=0)
 ```
+
+There are also a few "ready made functions" that we found useful on several scenarios that can be found in the `general.py`, `image_manipulation.py` and `encryption_wrappers.py`. Have a look at them before reimplementing some of these.

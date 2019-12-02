@@ -1,15 +1,16 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
+import os
+import sys
 import argparse
 import reportlab.lib.pagesizes
-from reportlab.pdfgen.canvas import Canvas
+
 from reportlab.lib import units
 from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.ttfonts import TTFont
-import re
-import sys
-import os
 
 
 class Margins(object):

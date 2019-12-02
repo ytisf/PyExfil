@@ -3,7 +3,7 @@
 
 __author__ = 'Yuval tisf Nativ'
 __license__ = 'GPLv3'
-__copyright__ = '2018, Yuval tisf Nativ'
+__copyright__ = '2019, Yuval tisf Nativ'
 
 import os
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         description="""PyExfil: Python communication library over non-standard channels.""",
         license=__license__,
         url='https://www.github.com/ytisf/pyexfil',
-        version="1.0 RC1",
+        version="1.3",
         download_url='https://www.github.com/ytisf/pyexfil',
         long_description=long_desc,
         packages=['pyexfil'],
@@ -49,5 +49,5 @@ if __name__ == '__main__':
                 'Operating System :: Unix',
                 'Operating System :: MacOS',
                 'Programming Language :: Python',
-                'Programming Language :: Python :: 2.7',)
+                'Programming Language :: Python :: 3.5',)
         )

@@ -68,6 +68,8 @@ pip setup.py --user install
   * [MDNS Query](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#mdns-query) - *Can be used as broadcast.*
   * [AllJoyn](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#alljoyn). Name Service Protocol (IoT discovery) Version 0 ISAT.
   * [PacketSize](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#packet-size). Using size of packet rather than actual data.  
+  * [UDP-Source-Port](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#udp-sport) Using the source port in UDP as a transmission medium.
+  * [CertExchange](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#Certificate-Exchange) Leveraging certificate exchange function for short bursts of communication. 
 * **Physical**
   * [Audio](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#audio) - *No listener*.
   * [QR Codes](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#qr-codes)
@@ -76,6 +78,8 @@ pip setup.py --user install
   * [Binary Offset](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#image-binary-offset)
   * [Video Transcript to Dictionary](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#video-dictionary)
   * [Braille Text Document](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#braille-text-document)
+  * [PNG Transparency](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#png-transparency)
+  * [ZIPCeption](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#zip-loop)
 
 For usage per modules have a look at the [USAGE](https://www.github.com/ytisf/PyExfil/USAGE.md) file.
 
@@ -109,9 +113,16 @@ For details about version look at the [tags on this repository](https://www.gith
 - [x] Uniform calling convention for newer modules.
 - [x] Exfiltration data-set generator (PII&PCI).
 
-### Version 1.1.0:
-- [ ] Review older modules and convert to newer.
-- [ ] Add servers to come modules.
+### Version 1.3 - Harpax:
+- [x] Adding 4 new modules.
+- [x] General fixups. 
+- [x] Some old modules recoded to fit new standard. 
+- [x] Full compatibility between Python2 and Python3. 
+
+### Version 1.4 - ?:
+- [ ] Expand physical exfiltration channels.
+- [ ] Re-test servers on older modules. 
+- [ ] Add file manipulation class (for example, module `zipception` does not fit into any existing category although currently residing under `Stega`).
 
 ### Hopefully - Close Future
 - [ ] Attempt at creating a more uniform call convention.

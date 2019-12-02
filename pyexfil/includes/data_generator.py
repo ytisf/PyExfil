@@ -73,7 +73,7 @@ PREFIX = {
 	CardTypes.JCB: [['3', '5']]
 }
 
-EMAIL_PROVIDRES = [
+EMAIL_PROVIDERS = [
 	'gmail.com', 'yahoo.com', 'hotmail.com', 'naver.com',
 	'hotmail.co.uk', 'hotmail.fr', 'msn.com', 'orange.fr',
 	'comcast.net', 'protonmail.com', 'live.com', 'rediffmail.com',
@@ -194,7 +194,7 @@ def EmailGenerator(firstname, lastname, domain=""):
 			pref += (str(randint(0,9)))
 
 	if domain == "":
-		pref = "%s@%s" % (pref, choice(EMAIL_PROVIDRES))
+		pref = "%s@%s" % (pref, choice(EMAIL_PROVIDERS))
 	else:
 		pref = "%s@%s" % (pref, domain)
 	return pref

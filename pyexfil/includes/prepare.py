@@ -41,6 +41,7 @@ def rc4(data, key):
     else:
         return bytes("".join(out), 'utf-8')
 
+
 def _splitString(stri, length):
     """
     Split string by a particular length.

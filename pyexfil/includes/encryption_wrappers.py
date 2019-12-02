@@ -23,7 +23,7 @@ def AESDecryptOFB(key, text, unpad=True):
 	decryptor = AES.new(padded_key, mode, iv)
 	plain = decryptor.decrypt(text)
 	if unpad:
-		plain = plain.replace("\x00", '')
+		plain = plain.replace(b"\x00", b'')
 	return plain
 
 """ END Symmetric stream mode for AES """
