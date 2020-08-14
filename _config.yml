@@ -1,7 +1,7 @@
 title: PyExfil
-description: A couple of beta stage tools for data exfiltration
+description: A Python Data Exfiltration and Concealed Communication Package
 google_analytics: UA-53267734-7
-show_downloads: true
+show_downloads: false
 theme: jekyll-theme-midnight
 
 gems:
