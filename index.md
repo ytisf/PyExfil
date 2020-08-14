@@ -46,49 +46,57 @@ pip setup.py --user install
 ## List of Techniques
 
 * **Network**
-  * [DNS query](https://www.github.com/ytisf/PyExfil/USAGE.md#dns-query)
-  * [HTTP Cookie](https://www.github.com/ytisf/PyExfil/USAGE.md#http-cookies)
-  * [ICMP (8)](https://www.github.com/ytisf/PyExfil/USAGE.md#icmp-echo-8)
-  * [NTP Body](https://www.github.com/ytisf/PyExfil/USAGE.md#ntp-body)
-  * [BGP Open](https://www.github.com/ytisf/PyExfil/USAGE.md#bgp-open)
-  * [HTTPS Replace Certificate](https://www.github.com/ytisf/PyExfil/USAGE.md#https-replace-certificate)
-  * [QUIC - No Certificate](https://www.github.com/ytisf/PyExfil/USAGE.md#quic)
-  * [Slack Exfiltration](https://www.github.com/ytisf/PyExfil/USAGE.md#slack)
-  * [POP3 Authentication](https://www.github.com/ytisf/PyExfil/USAGE.md#pop3-authentication) (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
-  * [FTP MKDIR](https://www.github.com/ytisf/PyExfil/USAGE.md#ftp-mkdir) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
-  * [Source IP-based Exfiltration](https://www.github.com/ytisf/PyExfil/USAGE.md#source-ip-based-exfiltration)
-  * [HTTP Response](https://www.github.com/ytisf/PyExfil/USAGE.md#http-response)
+  * [DNS query](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#dns-query)
+  * [HTTP Cookie](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#http-cookies)
+  * [ICMP (8)](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#icmp-echo-8)
+  * [NTP Body](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ntp-body)
+  * [BGP Open](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#bgp-open)
+  * [HTTPS Replace Certificate](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#https-replace-certificate)
+  * [QUIC - No Certificate](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#quic)
+  * [Slack Exfiltration](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#slack)
+  * [POP3 Authentication](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#pop3-authentication) (as password) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
+  * [FTP MKDIR](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ftp-mkdir) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
+  * [Source IP-based Exfiltration](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#source-ip-based-exfiltration)
+  * [HTTP Response](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#http-response)
 * **Communication**
-  * [NTP Request](https://www.github.com/ytisf/PyExfil/USAGE.md#ntp-request)
-  * [DropBox LSP](https://www.github.com/ytisf/PyExfil/USAGE.md#dropbox-lsp) (Broadcast or Unicast)
-  * [DNS over TLS](https://www.github.com/ytisf/PyExfil/USAGE.md#dns-over-tls)
-  * [ARP Broadcast](https://www.github.com/ytisf/PyExfil/USAGE.md#arp-broadcast)
-  * [JetDirect](https://www.github.com/ytisf/PyExfil/USAGE.md#jetdirect)
-  * [GQUIC](https://www.github.com/ytisf/PyExfil/USAGE.md#gquic) - [Google Quick UDP](https://www.chromium.org/quic) Internet Connections (Client Hello)
-  * [MDNS Query](https://www.github.com/ytisf/PyExfil/USAGE.md#mdns-query) - *Can be used as broadcast.*
-  * [AllJoyn](https://www.github.com/ytisf/PyExfil/USAGE.md#alljoyn). Name Service Protocol (IoT discovery) Version 0 ISAT.
+  * [NTP Request](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ntp-request)
+  * [DropBox LSP](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#dropbox-lsp) (Broadcast or Unicast)
+  * [DNS over TLS](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#dns-over-tls)
+  * [ARP Broadcast](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#arp-broadcast)
+  * [JetDirect](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#jetdirect)
+  * [GQUIC](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#gquic) - [Google Quick UDP](https://www.chromium.org/quic) Internet Connections (Client Hello)
+  * [MDNS Query](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#mdns-query) - *Can be used as broadcast.*
+  * [AllJoyn](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#alljoyn). Name Service Protocol (IoT discovery) Version 0 ISAT.
+  * [PacketSize](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#packet-size). Using size of packet rather than actual data.  
+  * [UDP-Source-Port](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#udp-sport) Using the source port in UDP as a transmission medium.
+  * [CertExchange](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#Certificate-Exchange) Leveraging certificate exchange function for short bursts of communication.
+  * [DNSQ](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#DNSQ) Leveraging DNS Queries for communication.
 * **Physical**
-  * [Audio](https://www.github.com/ytisf/PyExfil/USAGE.md#audio) - *No listener*.
-  * [QR Codes](https://www.github.com/ytisf/PyExfil/USAGE.md#qr-codes)
-  * [WiFi - On Payload](https://www.github.com/ytisf/PyExfil/USAGE.md#wifi-frame-payload)
+  * [Audio](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#audio) - *No listener*.
+  * [QR Codes](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#qr-codes)
+  * [WiFi - On Payload](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#wifi-frame-payload)
 * **Steganography**
-  * [Binary Offset](https://www.github.com/ytisf/PyExfil/USAGE.md#image-binary-offset)
-  * [Video Transcript to Dictionary](https://www.github.com/ytisf/PyExfil/USAGE.md#video-dictionary)
+  * [Binary Offset](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#image-binary-offset)
+  * [Video Transcript to Dictionary](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#video-dictionary)
+  * [Braille Text Document](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#braille-text-document)
+  * [PNG Transparency](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#png-transparency)
+  * [ZIPCeption](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#zip-loop)
 
 For usage per modules have a look at the [USAGE](https://www.github.com/ytisf/PyExfil/USAGE.md) file.
 
 ## Data Generation
-Although this tool was initially created as a game and later on turned to be a Red Team oriented tool, at the end of a day a major usage of `PyExfil` is to test various DLP (Data Leakage Protection) systems as well as detection of intrusion. To make the latter mission simpler we have created a little module to generate fake data with a structure that matches both PII and PCI data sets. These are intended to trigger alerts while being broadcated outside of the network. 
+Although this tool was initially created as a game and later on turned to be a Red Team oriented tool, at the end of a day a major usage of `PyExfil` is to test various DLP (Data Leakage Protection) systems as well as detection of intrusion. To make the latter mission simpler we have created a little module to generate fake data with a structure that matches both PII and PCI data sets. These are intended to trigger alerts while being broadcate outside of the network.
 
 Here is how to use it:
+
 ```python
 from pyexfil.includes import CreateTestData
 
 c = CreateTestData(rows=1000, output_location="/tmp/list.csv")
 c.Run()
-``` 
+```
 
-After this you can use which ever `PyExfil` module you would like to try and exfiltrate the data set created. This way you can test your detection without risking exfiltrating valuable data. 
+After this you can use which ever `PyExfil` module you would like to try and exfiltrate the data set created. This way you can test your detection without risking exfiltrating valuable data.
 
 
 ## Contributions
@@ -107,9 +115,16 @@ For details about version look at the [tags on this repository](https://www.gith
 - [x] Uniform calling convention for newer modules.
 - [x] Exfiltration data-set generator (PII&PCI).
 
-### Version 1.1.0:
-- [ ] Review older modules and convert to newer. 
-- [ ] Add servers to come modules. 
+### Version 1.3 - Harpax:
+- [x] Adding 4 new modules.
+- [x] General fixups.
+- [x] Some old modules recoded to fit new standard.
+- [x] Full compatibility between Python2 and Python3.
+
+### Version 1.4 - ?:
+- [ ] Expand physical exfiltration channels.
+- [ ] Re-test servers on older modules.
+- [ ] Add file manipulation class (for example, module `zipception` does not fit into any existing category although currently residing under `Stega`).
 
 ### Hopefully - Close Future
 - [ ] Attempt at creating a more uniform call convention.
@@ -132,4 +147,4 @@ For details about version look at the [tags on this repository](https://www.gith
 - Shout out to the [nmap](https://nmap.org/) guys.
 - Thanks to [Trey Hunner](https://github.com/treyhunner) for the package [`names`](https://github.com/treyhunner/names).
 - The [Faker](https://faker.readthedocs.io/en/master/) package.
-
+- Special thanks to Thomas Baruchel and Fredrik de Vibe for the [txt2pdf](https://github.com/baruchel/txt2pdf) package we used in the `braille` exfiltration package.
