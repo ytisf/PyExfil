@@ -69,7 +69,8 @@ pip setup.py --user install
   * [AllJoyn](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#alljoyn). Name Service Protocol (IoT discovery) Version 0 ISAT.
   * [PacketSize](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#packet-size). Using size of packet rather than actual data.  
   * [UDP-Source-Port](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#udp-sport) Using the source port in UDP as a transmission medium.
-  * [CertExchange](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#Certificate-Exchange) Leveraging certificate exchange function for short bursts of communication. 
+  * [CertExchange](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#Certificate-Exchange) Leveraging certificate exchange function for short bursts of communication.
+  * [DNSQ](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#DNSQ) Leveraging DNS Queries for communication.
 * **Physical**
   * [Audio](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#audio) - *No listener*.
   * [QR Codes](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#qr-codes)
@@ -84,9 +85,10 @@ pip setup.py --user install
 For usage per modules have a look at the [USAGE](https://www.github.com/ytisf/PyExfil/USAGE.md) file.
 
 ## Data Generation
-Although this tool was initially created as a game and later on turned to be a Red Team oriented tool, at the end of a day a major usage of `PyExfil` is to test various DLP (Data Leakage Protection) systems as well as detection of intrusion. To make the latter mission simpler we have created a little module to generate fake data with a structure that matches both PII and PCI data sets. These are intended to trigger alerts while being broadcated outside of the network.
+Although this tool was initially created as a game and later on turned to be a Red Team oriented tool, at the end of a day a major usage of `PyExfil` is to test various DLP (Data Leakage Protection) systems as well as detection of intrusion. To make the latter mission simpler we have created a little module to generate fake data with a structure that matches both PII and PCI data sets. These are intended to trigger alerts while being broadcate outside of the network.
 
 Here is how to use it:
+
 ```python
 from pyexfil.includes import CreateTestData
 
@@ -115,13 +117,13 @@ For details about version look at the [tags on this repository](https://www.gith
 
 ### Version 1.3 - Harpax:
 - [x] Adding 4 new modules.
-- [x] General fixups. 
-- [x] Some old modules recoded to fit new standard. 
-- [x] Full compatibility between Python2 and Python3. 
+- [x] General fixups.
+- [x] Some old modules recoded to fit new standard.
+- [x] Full compatibility between Python2 and Python3.
 
 ### Version 1.4 - ?:
 - [ ] Expand physical exfiltration channels.
-- [ ] Re-test servers on older modules. 
+- [ ] Re-test servers on older modules.
 - [ ] Add file manipulation class (for example, module `zipception` does not fit into any existing category although currently residing under `Stega`).
 
 ### Hopefully - Close Future

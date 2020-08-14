@@ -1,4 +1,7 @@
 import struct
+
+from os import path
+
 try:
 	import string
 except ImportError as e:
@@ -44,3 +47,11 @@ def inet_aton (packed):
 		return string.join(quads, '.')
 	except:
 		return False
+
+
+def does_file_exist(file_path):
+	"""Checks if a file exists and also that it is not a directory."""
+	if path.exists(file_path):
+		if path.isfile(file_path):
+			return True
+	return False

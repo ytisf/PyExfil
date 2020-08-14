@@ -76,3 +76,7 @@ class Broker():
 ```
 
 There are also a few "ready made functions" that we found useful on several scenarios that can be found in the `general.py`, `image_manipulation.py` and `encryption_wrappers.py`. Have a look at them before reimplementing some of these.
+
+## Exceptions
+
+`PyExfil` holds ability to raise custom exceptions. These exceptions appear in `pyexfil/includes/exceptions.py`
