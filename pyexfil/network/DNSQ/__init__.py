@@ -153,7 +153,7 @@ class Send:
 
 
 class Broker:
-    def __init__(self, key, retFunc=_testCallBack, host='', port=53):
+    def __init__(self, key=PYEXFIL_DEFAULT_PASSWORD, retFunc=_testCallBack, host='', port=53):
         self.key            = key
         self.callBack       = retFunc
         self.host           = host
