@@ -1,0 +1,14 @@
+requests
+impacket
+slackclient
+progressbar
+numpy
+pillow
+pytube
+PyCryptodome
+qrcode
+base58
+librosa
+luhn
+names
+Faker

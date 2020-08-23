@@ -13,16 +13,18 @@ except ImportError:
     from distutils.core import setup
 
 
-required = ['requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar', 'zlib', 'numpy', 'PIL', 'pytube', 'hashlib',
-            'urllib2', 'PyCrypto', 'ftplib', 'base58']
-            # Todo: Set that urllib2 is not installed from pip for Python3
+required = [
+        'requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar',
+        'zlib', 'numpy', 'Pillow', 'pytube', 'hashlib', 'urllib2', 'PyCrypto',
+        'ftplib', 'base58'
+        ]
 
 
 if __name__ == '__main__':
     if os.path.exists('MANIFEST'):
         os.remove('MANIFEST')
 
-    long_desc = "Just go to https://www.github.com/ytisf/pyexfil to see full readme."
+    long_desc = "See full README and USAGE on GITHUB yisf PyExfil."
 
     setup(name='PyExfil',
         maintainer=__author__,
@@ -30,7 +32,7 @@ if __name__ == '__main__':
         description="A Python package for data exfiltration.",
         license=__license__,
         url='https://pyexfil.morirt.com/',
-        version="1.3",
+        version="1.10.4",
         download_url='https://www.github.com/ytisf/pyexfil',
         long_description=long_desc,
         packages=['pyexfil'],
