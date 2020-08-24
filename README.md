@@ -141,6 +141,7 @@ For details about version look at the [tags on this repository](https://www.gith
 - Big shout out to [JetBrains](https://www.jetbrains.com/)!!!
 - Thanks to barachy and AM for ideas on protocols to use.
 - Thanks to [Itzik Kotler](https://github.com/ikotler) for some ideas.
+- Shout out to [@cac0ns3c](https://github.com/cac0ns3c) for resolving some dependency hell.
 
 ### Resources
 - Thanks [Wireshark](https://wireshark.com/) for your awesome wiki and tool. Especially [packet dumps](http://wiki.wireshark.org/SampleCaptures).
