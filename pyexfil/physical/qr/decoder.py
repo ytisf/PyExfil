@@ -19,7 +19,7 @@ QR_DIR = "outputs"
 DIR_MODE = "DIR_MODE"
 CAM_MODE = "CAM_MODE"
 DELIMITER = ";"
-RAMP_FRAMES = 30   # Until camera light is adjusted
+RAMP_FRAMES = 30  # Until camera light is adjusted
 
 
 def _takesnapshot():
@@ -36,21 +36,23 @@ def _takesnapshot():
     cv2.imwrite(TEMP_NAME, camera_capture)
     return True
 
+
 def _decodePNG(filepath):
     if type(filepath) is not str:
         return False
     try:
-        with open(filepath, 'rb') as image_file:
+        with open(filepath, "rb") as image_file:
             image = Image.open(image_file)
             image.load()
     except IOError, e:
         sys.stderr.write("Error %s while opening file '%s'.\n" % (e, filepath))
         return False
     try:
-        codes = zbarlight.scan_codes('qrcode', image)
+        codes = zbarlight.scan_codes("qrcode", image)
     except:
         return False
     return codes
+
 
 def startFlow(mode):
 
@@ -97,7 +99,10 @@ def startFlow(mode):
 
         hexy = hashlib.md5(rdata).hexdigest()
         if hexy == file_md5:
-            sys.stdout.write("Success. File '%s' has been retrived with matching hashed.\n" % file_name)
+            sys.stdout.write(
+                "Success. File '%s' has been retrived with matching hashed.\n"
+                % file_name
+            )
         else:
             sys.stderr.write("Hashes do not match. Saving anyway.\n")
 
@@ -122,10 +127,14 @@ def startFlow(mode):
                 else:
                     sys.stdout.write("Got QR Code in image.\n")
                     try:
-                        file_name, file_md5, amount_of_code = decoded[0].split(DELIMITER)
+                        file_name, file_md5, amount_of_code = decoded[0].split(
+                            DELIMITER
+                        )
                         amount_of_code = int(amount_of_code)
                     except:
-                        sys.stderr.write("There was an error reading the code as first package.\n.Please syncronize timing.\n")
+                        sys.stderr.write(
+                            "There was an error reading the code as first package.\n.Please syncronize timing.\n"
+                        )
                         continue
 
                     # First package was analyzed successfully.
@@ -150,7 +159,10 @@ def startFlow(mode):
 
                         hexy = hashlib.md5(rdata).hexdigest()
                         if hexy == file_md5:
-                            sys.stdout.write("Success. File '%s' has been retrived with matching hashed.\n" % file_name)
+                            sys.stdout.write(
+                                "Success. File '%s' has been retrived with matching hashed.\n"
+                                % file_name
+                            )
                         else:
                             sys.stderr.write("Hashes do not match. Saving anyway.\n")
 
@@ -164,10 +176,12 @@ def startFlow(mode):
                 sys.exit(0)
 
     else:
-        sys.stdout.write("Mode selected is wrong. Choose either DIR_MODE or CAM_MODE.\n")
+        sys.stdout.write(
+            "Mode selected is wrong. Choose either DIR_MODE or CAM_MODE.\n"
+        )
         return False
 
 
 if __name__ == "__main__":
-    startFlow(mode=DIR_MODE) # will use data in 'output' directory.
-    startFlow(mode=CAM_MODE) # will use data from camera
+    startFlow(mode=DIR_MODE)  # will use data in 'output' directory.
+    startFlow(mode=CAM_MODE)  # will use data from camera

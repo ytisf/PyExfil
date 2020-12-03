@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from __future__ import division #Avoid division problems in Python 2
+from __future__ import division  # Avoid division problems in Python 2
 import sys
 import wave
 import math

@@ -9,16 +9,11 @@ import struct
 import base64
 import hashlib
 
-if sys.version_info[0] < 3:
-    PY_VER = 2
-else:
-    PY_VER = 3
+DEFAULT_KEY = "ShutTheFuckUpDonnie!"
+DEFAULT_MAX_PACKET_SIZE = 65000
 
-DEFAULT_KEY                 = "ShutTheFuckUpDonnie!"
-DEFAULT_MAX_PACKET_SIZE     = 65000
-
-BINARY_DELIMITER            = "\x00\x00\xFF\xFF"
-ASCII_DELIMITER             = "<AAA\>"
+BINARY_DELIMITER = "\x00\x00\xFF\xFF"
+ASCII_DELIMITER = "<AAA\>"
 
 
 def rc4(data, key):
@@ -36,10 +31,7 @@ def rc4(data, key):
         S[i], S[j] = S[j], S[i]
         out.append(chr(ord(ch) ^ S[(S[i] + S[j]) % 256]))
 
-    if PY_VER is 2:
-        return "".join(out)
-    else:
-        return bytes("".join(out), 'utf-8')
+    return bytes("".join(out), "utf-8")
 
 
 def _splitString(stri, length):
@@ -49,10 +41,12 @@ def _splitString(stri, length):
     :param length: Length to split by, int
     :return: List
     """
+
     def _f(s, n):
         while s:
             yield s[:n]
             s = s[n:]
+
     if type(length) is not int:
         sys.stderr.write("'length' parameter must be an int.\n")
         return False
@@ -90,15 +84,15 @@ def DecodePacket(packet_data, enc_key=DEFAULT_KEY, b64_flag=False):
                 splitData = data.split(ASCII_DELIMITER)
             else:
                 splitData = data.split(BINARY_DELIMITER)
-            ret['initFlag'] = True
-            ret['fileData'] = {}
-            ret['fileData']['FileName'] = splitData[0]
-            ret['fileData']['TotalPackets'] = splitData[2]
-            ret['fileData']['SequenceID'] = splitData[3]
-            ret['fileData']['MD5'] = splitData[4]
-            ret['packetNumber'] = splitData[1]
+            ret["initFlag"] = True
+            ret["fileData"] = {}
+            ret["fileData"]["FileName"] = splitData[0]
+            ret["fileData"]["TotalPackets"] = splitData[2]
+            ret["fileData"]["SequenceID"] = splitData[3]
+            ret["fileData"]["MD5"] = splitData[4]
+            ret["packetNumber"] = splitData[1]
             return ret
-            
+
         try:
             data = rc4(data, enc_key)
         except ValueError as e:
@@ -113,30 +107,35 @@ def DecodePacket(packet_data, enc_key=DEFAULT_KEY, b64_flag=False):
 
     if len(splitData) == 5:
         # Init packet
-        ret['initFlag'] = True
-        ret['fileData'] = {}
-        ret['fileData']['FileName'] = splitData[0]
-        ret['fileData']['TotalPackets'] = splitData[2]
-        ret['fileData']['SequenceID'] = splitData[3]
-        ret['fileData']['MD5'] = splitData[4]
-        ret['packetNumber'] = splitData[1]
+        ret["initFlag"] = True
+        ret["fileData"] = {}
+        ret["fileData"]["FileName"] = splitData[0]
+        ret["fileData"]["TotalPackets"] = splitData[2]
+        ret["fileData"]["SequenceID"] = splitData[3]
+        ret["fileData"]["MD5"] = splitData[4]
+        ret["packetNumber"] = splitData[1]
         return ret
 
     elif len(splitData) == 3:
         # Data packet
-        ret['initFlag'] = False
-        ret['packetNumber'] = splitData[1]
-        ret['SequenceID'] = splitData[0]
-        ret['Data'] = splitData[2]
+        ret["initFlag"] = False
+        ret["packetNumber"] = splitData[1]
+        ret["SequenceID"] = splitData[0]
+        ret["Data"] = splitData[2]
         return ret
 
     else:
-        sys.stderr.write("Packet split into %s amount of chunks which i don't know.\n" % len(splitData))
+        sys.stderr.write(
+            "Packet split into %s amount of chunks which i don't know.\n"
+            % len(splitData)
+        )
         return False
 
 
-def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key=DEFAULT_KEY):
-    '''
+def PrepFile(
+    file_path, kind="binary", max_size=DEFAULT_MAX_PACKET_SIZE, enc_key=DEFAULT_KEY
+):
+    """
     PrepFile creats a file ready for sending and return an object.
     :param file_path: string, filepath of exfiltration file.
     :param kind: string, binary or ascii as for character limitations.
@@ -146,68 +145,68 @@ def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key
                     Default key is 'ShutTheFuckUpDonnie!'
     :returns: dictionary with data and 'Packets' as list of packets for
                 exfiltration sorted by order.
-    '''
+    """
     ret = {}
-    if kind not in ['binary', 'ascii']:
+    if kind not in ["binary", "ascii"]:
         sys.stderr.write("Parameter 'kind' must by binary/ascii.\n")
         return False
 
     # Set delimiter based on kind of data we can send
-    if kind == 'ascii':
+    if kind == "ascii":
         delm = ASCII_DELIMITER
     else:
         delm = BINARY_DELIMITER
 
     # Read the file
     try:
-        f = open(file_path, 'rb')
+        f = open(file_path, "rb")
         data = f.read()
         f.close()
     except IOError as e:
-        sys.stderr.write("Error opening file '%s'.\n" % file_path )
+        sys.stderr.write("Error opening file '%s'.\n" % file_path)
         return False
 
     # Compute hashes and other meta data
     hash_raw = hashlib.md5(data).hexdigest()
     if enc_key != "":
-        ret['Key'] = enc_key
-        ret['EncryptionFlag'] = True
+        ret["Key"] = enc_key
+        ret["EncryptionFlag"] = True
     else:
-        ret['EncryptionFlag'] = False
+        ret["EncryptionFlag"] = False
     compData = zlib.compress(data)
     hash_compressed = hashlib.md5(compData).hexdigest()
-    ret['FilePath'] = file_path
-    ret['ChunksSize'] = max_size
+    ret["FilePath"] = file_path
+    ret["ChunksSize"] = max_size
     if "/" in file_path:
         ll = file_path.split("/")
-        ret['FileName'] = ll[-1]
+        ret["FileName"] = ll[-1]
     elif "\\" in file_path:
         ll = file_path.split("\\")
-        ret['FileName'] = ll[-1]
+        ret["FileName"] = ll[-1]
     else:
-        ret['FileName'] = file_path
-    ret['RawHash'] = hash_raw
-    ret['CompressedHash'] = hash_compressed
-    if kind == 'ascii':
+        ret["FileName"] = file_path
+    ret["RawHash"] = hash_raw
+    ret["CompressedHash"] = hash_compressed
+    if kind == "ascii":
         data_for_packets = base64.b64encode(compData)
     else:
         data_for_packets = compData
 
-    ret['CompressedSize'] = len(data_for_packets)
-    ret['RawSize'] = len(data)
+    ret["CompressedSize"] = len(data_for_packets)
+    ret["RawSize"] = len(data)
 
     packetsData = _splitString(data_for_packets, max_size)
-    ret['PacketsCount'] = len(packetsData) + 1
-    ret['FileSequenceID'] = random.randint(1024,4096)
-    ret['Packets'] = []
+    ret["PacketsCount"] = len(packetsData) + 1
+    ret["FileSequenceID"] = random.randint(1024, 4096)
+    ret["Packets"] = []
 
     # Start building packets
     # Init Packet
     ha = hashlib.md5(data_for_packets).hexdigest()
-    fname = ret['FileName']
+    fname = ret["FileName"]
     pcount = str(len(packetsData) + 1)
     thisCounter = "1"
-    seqID = str(ret['FileSequenceID'])
+    seqID = str(ret["FileSequenceID"])
 
     initPacket = fname + delm + thisCounter + delm
     initPacket += pcount + delm + seqID + delm + hash_raw
@@ -215,11 +214,11 @@ def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key
         pass
     else:
         initPacket = rc4(initPacket, enc_key)
-    if kind == 'ascii':
+    if kind == "ascii":
         initPacket = rc4(initPacket, enc_key)
         initPacket = base64.b64encode(initPacket)
 
-    ret['Packets'].append(initPacket)
+    ret["Packets"].append(initPacket)
 
     # Every Packet
     i = 2
@@ -227,18 +226,20 @@ def PrepFile(file_path, kind='binary', max_size=DEFAULT_MAX_PACKET_SIZE, enc_key
         thisPacket = "%s%s%s%s%s" % (seqID, delm, str(i), delm, chunk)
         if enc_key != "":
             thisPacket = rc4(thisPacket, enc_key)
-        if kind == 'ascii':
-            ret['Packets'].append(base64.b64encode(thisPacket))
+        if kind == "ascii":
+            ret["Packets"].append(base64.b64encode(thisPacket))
         else:
-            ret['Packets'].append(thisPacket)
+            ret["Packets"].append(thisPacket)
         thisPacket = ""
         i += 1
 
     return ret
 
 
-def PrepString(data, max_size=DEFAULT_MAX_PACKET_SIZE, enc_key=DEFAULT_KEY, compress=True):
-    '''
+def PrepString(
+    data, max_size=DEFAULT_MAX_PACKET_SIZE, enc_key=DEFAULT_KEY, compress=True
+):
+    """
     PrepFile creats a file ready for sending and return an object.
     :param data: string, data to be exfiltrated.
     :param max_size: integer, default=6500, max amount of data per packet.
@@ -247,44 +248,44 @@ def PrepString(data, max_size=DEFAULT_MAX_PACKET_SIZE, enc_key=DEFAULT_KEY, comp
                     Default key is 'ShutTheFuckUpDonnie!'
     :returns: dictionary with data and 'Packets' as list of packets for
                 exfiltration sorted by order.
-    '''
+    """
     ret = {}
-    
+
     # Compute hashes and other meta data
     hash_raw = hashlib.md5(data).hexdigest()
     if enc_key != "":
-        ret['Key'] = enc_key
-        ret['EncryptionFlag'] = True
+        ret["Key"] = enc_key
+        ret["EncryptionFlag"] = True
     else:
-        ret['EncryptionFlag'] = False
-        
-    if PY_VER is 3:
-        if type(enc_key) is bytes:
-            enc_key = enc_key.decode("utf-8")
-        if type(data) is bytes:
-            data = data.decode("utf-8")
-        
+        ret["EncryptionFlag"] = False
+
+    if type(enc_key) is bytes:
+        enc_key = enc_key.decode("utf-8")
+    if type(data) is bytes:
+        data = data.decode("utf-8")
+
     if enc_key is None:
-        compData = bytes(data, 'utf-8')
+        compData = bytes(data, "utf-8")
     else:
         compData = rc4(data, enc_key)
-    
+
     if compress:
         compData = zlib.compress(compData)
         compData = base64.b85encode(compData)
+
     hash_compressed = hashlib.md5(compData).hexdigest()
-    ret['FilePath'] = None
-    ret['ChunksSize'] = max_size
-    ret['FileName'] = None
-    ret['RawHash'] = hash_raw
-    ret['CompressedHash'] = hash_compressed
-    ret['CompressedSize'] = len(compData)
-    ret['RawSize'] = len(data)
+    ret["FilePath"] = None
+    ret["ChunksSize"] = max_size
+    ret["FileName"] = None
+    ret["RawHash"] = hash_raw
+    ret["CompressedHash"] = hash_compressed
+    ret["CompressedSize"] = len(compData)
+    ret["RawSize"] = len(data)
 
     packetsData = _splitString(compData, max_size)
-    ret['PacketsCount'] = len(packetsData) + 1
-    ret['FileSequenceID'] = random.randint(1024,4096)
-    ret['Packets'] = packetsData
+    ret["PacketsCount"] = len(packetsData) + 1
+    ret["FileSequenceID"] = random.randint(1024, 4096)
+    ret["Packets"] = packetsData
 
     return ret
 
@@ -305,32 +306,32 @@ def RebuildFile(packets_data):
         if type(pkt) is not dict:
             sys.stderr.write("All elements in list needs to be dict.\n")
             return False
-        if pkt['initFlag'] is True:
+        if pkt["initFlag"] is True:
             initPacket = pkt
     if initPacket is None:
         sys.stderr.write("No init packet was found.\n")
         return False
 
-    md5 = initPacket['fileData']['MD5']
-    seq = int(initPacket['fileData']['SequenceID'])
-    pkts_count = int(initPacket['fileData']['TotalPackets'])
-    fname = initPacket['fileData']['FileName']
+    md5 = initPacket["fileData"]["MD5"]
+    seq = int(initPacket["fileData"]["SequenceID"])
+    pkts_count = int(initPacket["fileData"]["TotalPackets"])
+    fname = initPacket["fileData"]["FileName"]
     ret = {}
-    ret['FileName'] = fname
-    ret['Packets'] = pkts_count
-    ret['MD5'] = md5
-    ret['Sequence'] = seq
-    ret['Success'] = False
+    ret["FileName"] = fname
+    ret["Packets"] = pkts_count
+    ret["MD5"] = md5
+    ret["Sequence"] = seq
+    ret["Success"] = False
 
     ddddata = ""
-    for i in range(1, pkts_count+1):
+    for i in range(1, pkts_count + 1):
         if i == 1:
             continue
         foundFlag = False
         for pkt in packets_data:
             try:
-                if int(pkt['SequenceID']) == seq and int(pkt['packetNumber']) == i:
-                    ddddata += pkt['Data']
+                if int(pkt["SequenceID"]) == seq and int(pkt["packetNumber"]) == i:
+                    ddddata += pkt["Data"]
                     foundFlag = True
             except:
                 pass
@@ -341,21 +342,21 @@ def RebuildFile(packets_data):
     decoded = zlib.decompress(ddddata)
     try:
         decoded = zlib.decompress(ddddata)
-        ret['Data'] = decoded
-        ret['DataLength'] = len(decoded)
+        ret["Data"] = decoded
+        ret["DataLength"] = len(decoded)
         summ = hashlib.md5(decoded).hexdigest()
         if summ == md5:
-            ret['Success'] = True
-            ret['Info'] = "Decoded and hashes matched!"
+            ret["Success"] = True
+            ret["Info"] = "Decoded and hashes matched!"
         else:
-            ret['Success'] = True
-            ret['Info'] = "Decoded but hashes do not match."
+            ret["Success"] = True
+            ret["Info"] = "Decoded but hashes do not match."
         return ret
     except:
-        ret['Data'] = ddddata
-        ret['DataLength'] = len(ddddata)
-        ret['Success'] = False
-        ret['Info'] = "Unable to decode data"
+        ret["Data"] = ddddata
+        ret["DataLength"] = len(ddddata)
+        ret["Success"] = False
+        ret["Info"] = "Unable to decode data"
         return ret
 
 
