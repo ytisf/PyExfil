@@ -26,7 +26,7 @@ def _open_socket():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind((host, port))
         sock.listen(conns)
-    except socket.error, e:
+    except socket.error as e:
         sys.stderr.write("[-] Socket error trying to listen to %s:%s.\n" % (host, port))
         sys.stderr.write(str(e))
         sys.exit(ERR)

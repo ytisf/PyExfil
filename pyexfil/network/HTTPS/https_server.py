@@ -69,7 +69,7 @@ class HTTPSExfiltrationServer():
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.bind((self.host, self.port))
             sock.listen(self.max_connections)
-        except socket.error, e:
+        except socket.error as e:
             sys.stderr.write("[-]\tSocket error trying to listen to %s:%s.\n" % (self.host, self.port))
             sys.stderr.write(str(e) + "\n")
             sys.exit(1)
@@ -85,7 +85,7 @@ class HTTPSExfiltrationServer():
         try:
             frwd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             frwd.connect((self.duplicate_host, 443))
-        except socket.error, e:
+        except socket.error as e:
             sys.stderr.write("[!]\tCould not establish connection to duplication host.\n%s.\n" % e)
             return 1
 

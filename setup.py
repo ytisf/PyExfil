@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'Yuval tisf Nativ'
+from pyexfil import AUTHORS, RELEASE_DATE, NAME, URL, SLOGAN, VERSION
+
+__author__ = AUTHORS[0]
 __license__ = 'GPLv3'
-__copyright__ = '2020, Yuval tisf Nativ'
+__copyright__ = '%s, %s' % (RELEASE_DATE[0:3], AUTHORS[0])
 
 import os
 
@@ -16,7 +18,7 @@ except ImportError:
 required = [
         'requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar',
         'zlib', 'numpy', 'Pillow', 'pytube', 'hashlib', 'urllib2', 'PyCrypto',
-        'ftplib', 'base58'
+        'base58', 'names', 'Faker', 'luhn'
         ]
 
 
@@ -24,16 +26,16 @@ if __name__ == '__main__':
     if os.path.exists('MANIFEST'):
         os.remove('MANIFEST')
 
-    long_desc = "See full README and USAGE on GITHUB yisf PyExfil."
+    long_desc = "See full README and USAGE on GITHUB yisf %s." % (NAME)
 
     setup(name='PyExfil',
         maintainer=__author__,
         maintainer_email='yuval@morirt.com',
         description="A Python package for data exfiltration.",
         license=__license__,
-        url='https://pyexfil.morirt.com/',
-        version="1.10.4",
-        download_url='https://www.github.com/ytisf/pyexfil',
+        url=URL,
+        version=VERSION,
+        download_url=URL,
         long_description=long_desc,
         packages=['pyexfil'],
         install_requires=required,

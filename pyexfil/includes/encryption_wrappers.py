@@ -11,16 +11,20 @@ PYEXFIL_DEFAULT_PASSWORD 	= base64.b64decode('VEhBVElTQURFQURQQVJST1Qh')
 """ START Symmetric stream mode for AES """
 
 def AESEncryptOFB(key, text):
+	if type(key) == str:
+		key = bytes(key, 'ascii')
 	pad_len = (-len(text)) % 16
 	padded_text = text + b'\x00' * pad_len
 	padded_key = key +  b'\x00' * (32 - len(key))
-	encs = AES.new(padded_key, mode, iv)
+	encs = AES.new(padded_key, mode, iv.encode("utf8"))
 	plain = encs.encrypt(padded_text)
 	return plain
 
 def AESDecryptOFB(key, text, unpad=True):
+	if type(key) == str:
+		key = bytes(key, 'ascii')
 	padded_key = key + b'\x00' * (32 - len(key))
-	decryptor = AES.new(padded_key, mode, iv)
+	decryptor = AES.new(padded_key, mode, iv.encode("utf8"))
 	plain = decryptor.decrypt(text)
 	if unpad:
 		plain = plain.replace(b'\x00', b'')

@@ -70,7 +70,7 @@ class HTTPSExfiltrationClient():
             html = response.read()
         except urllib2.URLError, e:
             return 0
-        except socket.error, e:
+        except socket.error as e:
             sys.stderr.write("[!]\tCould not reach server to fake SSL handshake!\n")
             return 1
         except ssl.CertificateError:
@@ -84,7 +84,7 @@ class HTTPSExfiltrationClient():
             sock.connect((self.host, self.port))
             self.sock = sock
             return 0
-        except socket.error, e:
+        except socket.error as e:
             sys.stderr.write("[!]\tCould not setup a connection to %s. Error:\n%s.\n" % (self.host, e))
             return 1
 

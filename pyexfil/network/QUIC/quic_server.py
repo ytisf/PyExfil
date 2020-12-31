@@ -74,7 +74,7 @@ class HTTPSExfiltrationServer():
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock.bind((self.host, self.port))
-        except socket.error, e:
+        except socket.error as e:
             sys.stderr.write("[-]\tSocket error trying to listen to %s:%s.\n" % (self.host, self.port))
             sys.stderr.write(str(e) + "\n")
             sys.exit(1)

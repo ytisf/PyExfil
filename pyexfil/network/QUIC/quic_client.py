@@ -94,7 +94,7 @@ class QUICClient():
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock = sock
             return 0
-        except socket.error, e:
+        except socket.error as e:
             sys.stderr.write("[!]\tFailed to create a UDP socket.\n%s.\n" % e)
             return 1
 

