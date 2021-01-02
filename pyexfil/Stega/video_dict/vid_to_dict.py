@@ -21,7 +21,7 @@ import random
 try:
     import numpy as np
     from PIL import Image
-    from pytube import pytube
+    from pytube import YouTube
 except ImportError, e:
     sys.stderr.write("Please install the dependencies needed.\n")
     sys.stderr.write("\t%s\n" % e)
@@ -35,10 +35,9 @@ INDEX_MAP = {}
 def _getYouTubeVideo(url):
     try:
         yt = YouTube(url)
-        yt.set_filename('Current')
         sys.stdout.write("[.]\tGetting video.\n")
         video = yt.get('mp4', '720p')
-        video.download('/tmp/main.mp4')
+        video.download('/tmp/main.mp4', filename='Current')
         sys.stdout.write("[.]\tVideo saved to /tmp/main.mp4.\n")
         return True
     except:

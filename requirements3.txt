@@ -4,7 +4,7 @@ slackclient
 progressbar
 numpy
 pillow
-pytube
+pytube3
 PyCrypto
 qrcode
 base58

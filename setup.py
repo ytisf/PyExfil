@@ -17,7 +17,7 @@ except ImportError:
 
 required = [
         'requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar',
-        'zlib', 'numpy', 'Pillow', 'pytube', 'hashlib', 'urllib2', 'PyCrypto',
+        'zlib', 'numpy', 'Pillow', 'pytube3', 'hashlib', 'urllib2', 'PyCrypto',
         'base58', 'names', 'Faker', 'luhn'
         ]
 

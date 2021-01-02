@@ -144,6 +144,7 @@ For details about version look at the [tags on this repository](https://www.gith
 - Thanks to [Itzik Kotler](https://github.com/ikotler) for some ideas.
 - Shout out to [@cac0ns3c](https://github.com/cac0ns3c) for resolving some dependency hell.
 - Thanks to [@Nilesh0301](https://github.com/Nilesh0301) for pointing out some Python compatibility issues.
+- Big thanks to [@hbmartin](https://github.com/hbmartin) for pointing us to [pytube3](https://github.com/get-pytube/pytube3) latest update and support.
 
 ### Resources
 - Thanks [Wireshark](https://wireshark.com/) for your awesome wiki and tool. Especially [packet dumps](http://wiki.wireshark.org/SampleCaptures).
