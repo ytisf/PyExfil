@@ -6,21 +6,22 @@ import zlib
 import time
 import datetime
 import base64
+
 from socket import *
 from impacket import ImpactPacket
 
 
 """ Constants """
-READ_BINARY = "rb"
-WRITE_BINARY = "wb"
-READ_FROM_SOCK = 7000
-ICMP_HEADER_SIZE = 27
-DATA_SEPARATOR = "::"
-DATA_TERMINATOR = "\x12\x13\x14\x15"
-INIT_PACKET = "\x12\x11\x13\x12\x12\x12"
-END_PACKET = "\x15\x14\x13\x12"
-LOGFILE_BASENAME = "icmp_log"
-LOGFILE_EXT = ".txt"
+READ_BINARY 			= "rb"
+WRITE_BINARY 			= "wb"
+READ_FROM_SOCK 			= 7000
+ICMP_HEADER_SIZE 		= 27
+DATA_SEPARATOR 			= "::"
+DATA_TERMINATOR 		= "\x12\x13\x14\x15"
+INIT_PACKET 			= "\x12\x11\x13\x12\x12\x12"
+END_PACKET 				= "\x15\x14\x13\x12"
+LOGFILE_BASENAME 		= "icmp_log"
+LOGFILE_EXT 			= ".txt"
 
 
 def send_file(ip_addr, src_ip_addr="127.0.0.1", file_path="", max_packetsize=512, SLEEP=0.1):

