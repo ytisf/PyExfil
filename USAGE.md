@@ -646,6 +646,17 @@ server.StartListening(adapter="en0")
 
 ### Steganography
 
+#### BIP Style Dictionary
+This module will use a previously made dictionary (that be be replaced with any unique list of words with 65,536 words) to encode data into a list of words. The idea is that the list of words will be used to replace the bytes in a file. The resulting text will **not** be legible and will raise suspicion by any human reading it. This module is meant to be used in conjunction with other modules to exfiltrate data **OR** by embedding this text on a text based communication service. For example, an email or an Office document can include text that is not legible to the human eye but can be decoded by the module.
+
+```python
+from pyexfil.Stega.ConvertToText as BipExport
+
+packed = BipExport.Load('/etc/passwd')     # Encode
+print(BipExport.Decode(packed))            # Decode
+```
+
+
 #### Image Binary Offset
 The binary offset technique will take a file, (zlib it), convert it into a binary string *b01010101...*, and then take an image, and convert it into a pixel array with 3 entities per pixel `(int(R),int(G),int(B))`. In case where the image has a transperancy pixel (PNG for example) the PyExfil will currently ignore it. Then the binary string will be incorprated into the pixel array and saved in another location.
 
