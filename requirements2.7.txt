@@ -2,7 +2,6 @@ requests
 impacket
 slackclient
 progressbar
-numpy
 pillow
 pytube3
 PyCryptodome
@@ -12,3 +11,10 @@ librosa
 luhn
 names
 Faker
+pyobjc-framework-Quartz
+scipy
+numpy
+sounddevice
+pylibdmtx
+opencv-python
+pillow

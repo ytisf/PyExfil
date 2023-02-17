@@ -76,12 +76,14 @@ pip setup.py --user install
   * [Audio](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#audio) - *No listener*.
   * [QR Codes](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#qr-codes)
   * [WiFi - On Payload](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#wifi-frame-payload)
+  * [3.5mm Jack](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#3.5mm-jack)
 * **Steganography**
   * [Binary Offset](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#image-binary-offset)
   * [Video Transcript to Dictionary](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#video-dictionary)
   * [Braille Text Document](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#braille-text-document)
   * [PNG Transparency](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#png-transparency)
   * [ZIPCeption](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#zip-loop)
+  * [DataMatrix over LSB](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#datamatrix-over-lsb)
 
 For usage per modules have a look at the [USAGE](https://www.github.com/ytisf/PyExfil/USAGE.md) file.
 

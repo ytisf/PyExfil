@@ -583,6 +583,29 @@ a.Send("Hello world")
 
 ### Physical
 
+#### 3.5mm Jack
+This module is for machines that are air-gapped from other networks and have severe hardening. It's meant to convert a file to a set of tones to be played through a 3.5mm jack and then be able to make sense of them. It also assumes that hardware devices are strictly limited and new device registration might trigger an alert. 
+
+In this example code, we use a 16-QAM modulation scheme to encode 4 bits per symbol. We generate a random digital signal consisting of 1024 bits and reshape it into a 2D array with 4 bits per symbol. We then QAM modulate the digital signal using the qammod() function in the scipy.signal library.
+
+We add noise to the modulated signal using the stats.norm.rvs() function in the scipy.stats library to simulate the effects of noise and interference in the transmission. We then play the modulated signal over the default audio output device using the sounddevice library.
+
+```python
+from pyexfil.physical.35jack import QAMReceiver, QAMTransmitter
+
+recvr   = QAMTransmitter(   fs=48000, fc=2000, symbol_duration=0.01, bits_per_symbol=4,
+                            modulation_order=16, noise_level=0.1)
+
+sender.transmit(sender.encode_data("Hello world!".encode('utf-8'))
+
+# Now listen to the audio output and you should hear the data being transmitted
+sender  = QAMReceiver(      fs=48000, fc=2000, symbol_duration=0.01, bits_per_symbol=4, modulation_order=16)
+recvr.receive()
+```
+
+> Make sure you `pip install -r requirements.txt`!
+
+
 #### Audio
 The Audio module will compile a file into a WAV function. When it's being played a listener can collect the tones and should be able (in a clean environment!) to reconstruct the file. This should be relatively useful for AirGapped networks which are extremely hardened.
 
@@ -656,6 +679,17 @@ packed = BipExport.Load('/etc/passwd')     # Encode
 print(BipExport.Decode(packed))            # Decode
 ```
 
+#### Datamatrix over LSB
+This module will take a file and encode it into a datamatrix code. The datamatrix code will be encoded into the LSB of an image. The resulting image will be saved in the same directory as the original image. It works in a similar manner to other LSB mechanisms, however, since the data is encoded by using a DataMatrix code, the data is more reliable and can be decoded with a higher success rate, and more importantly, the data is not legible to the human eye - hence stealthy.
+
+```python
+from pyexfil.Stega.datamatrix import DataMatrixOverLSB
+
+this = DataMatrixOverLSB()
+
+this.Encode('hello wrld'.encode('utf8')*50, 'image.png', 'Encoded.png')
+this.Decode(image_path='Encoded.png')
+```
 
 #### Image Binary Offset
 The binary offset technique will take a file, (zlib it), convert it into a binary string *b01010101...*, and then take an image, and convert it into a pixel array with 3 entities per pixel `(int(R),int(G),int(B))`. In case where the image has a transperancy pixel (PNG for example) the PyExfil will currently ignore it. Then the binary string will be incorprated into the pixel array and saved in another location.
