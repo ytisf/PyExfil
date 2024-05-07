@@ -72,11 +72,13 @@ pip setup.py --user install
   * [UDP-Source-Port](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#udp-sport) Using the source port in UDP as a transmission medium.
   * [CertExchange](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#Certificate-Exchange) Leveraging certificate exchange function for short bursts of communication.
   * [DNSQ](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#DNSQ) Leveraging DNS Queries for communication.
+  * [ICMP_TTL](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ICMP_TTL) Leveraging the TTL byte for communication. Very short but also stealthy. 
 * **Physical**
   * [Audio](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#audio) - *No listener*.
   * [QR Codes](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#qr-codes)
   * [WiFi - On Payload](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#wifi-frame-payload)
   * [3.5mm Jack](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#3.5mm-jack)
+  * [UltraSonic](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#ultrasonic)
 * **Steganography**
   * [Binary Offset](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#image-binary-offset)
   * [Video Transcript to Dictionary](https://github.com/ytisf/PyExfil/blob/master/USAGE.md#video-dictionary)

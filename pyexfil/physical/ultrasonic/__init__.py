@@ -10,7 +10,7 @@ from pyexfil.includes.prepare import rc4, DEFAULT_KEY
 
 
 
-class QAMReceiver:
+class UltrasonicReceiver:
     """
     A class that performs QAM demodulation on audio input.
 
@@ -33,7 +33,7 @@ class QAMReceiver:
 
     """
 
-    def __init__(self, fs=48000, fc=2000, symbol_duration=0.01, bits_per_symbol=4, modulation_order=16):
+    def __init__(self, fs=48000, fc=22000, symbol_duration=0.01, bits_per_symbol=4, modulation_order=16):
         """
         Initializes the QAMReceiver object with the specified parameters.
 
@@ -79,7 +79,7 @@ class QAMReceiver:
                 print(f"Error: {e}")
 
 
-class QAMTransmitter:
+class UltrasonicTransmitter:
     """
     A class that performs QAM modulation and transmits the modulated signal over audio.
 
@@ -104,7 +104,7 @@ class QAMTransmitter:
 
     """
 
-    def __init__(self, fs=48000, fc=2000, symbol_duration=0.01, bits_per_symbol=4,
+    def __init__(self, fs=48000, fc=22000, symbol_duration=0.01, bits_per_symbol=4,
                  modulation_order=16, noise_level=0.1):
         """
         Initializes the QAMTransmitter object with the specified parameters.

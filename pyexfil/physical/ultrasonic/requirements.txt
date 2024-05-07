@@ -1,0 +1,4 @@
+pyobjc-framework-Quartz
+scipy
+numpy
+sounddevice
