@@ -1,10 +1,44 @@
 from Crypto.Cipher import AES
 import base64
-
+import hmac
+import hashlib
 
 mode 						= AES.MODE_OFB
 iv 							= "\x00" * 16
 PYEXFIL_DEFAULT_PASSWORD 	= base64.b64decode('VEhBVElTQURFQURQQVJST1Qh')
+
+
+""" Create HMAC Digest """
+def GenerateHMAC(data, key=PYEXFIL_DEFAULT_PASSWORD):
+	"""
+	Create an HMAC digest using the SHA-256 hash algorithm.
+
+	Parameters:
+		data (bytes): Data to be hashed.
+		key (bytes): Secret key used for HMAC generation.
+
+	Returns:
+		bytes: HMAC digest of the data.
+	"""
+	return hmac.new(key, data, hashlib.sha256).digest()
+
+
+def VerifyHMAC(data, expected_hmac, key=PYEXFIL_DEFAULT_PASSWORD):
+	"""
+	Verify an HMAC digest.
+
+	Parameters:
+		data (bytes): Original data whose HMAC was generated.
+		expected_hmac (bytes): HMAC digest to verify.
+		key (bytes): Secret key used for HMAC generation.
+
+	Returns:
+		bool: True if verification is successful, False otherwise.
+	"""
+	# Generate a new HMAC digest from the data and key
+	new_hmac = GenerateHMAC(data, key)
+	# Compare the new HMAC with the expected HMAC
+	return hmac.compare_digest(new_hmac, expected_hmac)
 
 
 

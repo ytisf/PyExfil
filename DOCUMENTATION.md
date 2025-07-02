@@ -6,6 +6,10 @@ PyExfil aims to provide a versatile yet straightforward framework for data exfil
 ## Introduction
 PyExfil is designed with modularity and ease of use in mind, focusing on standalone modules to support a wide range of exfiltration techniques. By maintaining minimal dependencies, PyExfil ensures compatibility across different environments and ease of conversion to static binaries for multiple operating systems.
 
+## `zlib` known issue
+- `zlib` is required for compression and decompression of data. However, it is not a part of a python package but ratther a part of the standard library. This means that it is not available on all systems by default. If you encounter an error related to `zlib`, please ensure that it is installed on your system. 
+- You can install it using your package manager (e.g., `apt-get install zlib1g-dev` on Debian-based systems).
+- On MacOS, you can install it using Homebrew with the command `brew install zlib`.
 
 ### Shared Abilities
 Central to PyExfil is the ability to prepare data for exfiltration efficiently. This functionality is encapsulated in the `pyexfil/includes/prepare` module, which offers methods for file compression, encryption, encoding, and splitting into manageable packets.
@@ -105,6 +109,8 @@ Contributions to PyExfil are welcome. Please follow the project's contribution g
 
 # Legal and Ethical Use
 PyExfil is provided for educational and research purposes. Users must ensure all activities conducted with PyExfil comply with applicable laws and ethical guidelines. The developers disclaim any liability for misuse or illegal activities.
+
+
 
 
 

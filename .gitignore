@@ -14,3 +14,4 @@ __pycache__/
 venv/
 venv2/
 venv2.7/
+/mypy_cache/

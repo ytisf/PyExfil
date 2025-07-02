@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from pyexfil import AUTHORS, RELEASE_DATE, NAME, URL, SLOGAN, VERSION
+from pyexfil import LAST_UPDATE
 
 __author__ = AUTHORS[0]
 __license__ = 'GPLv3'
-__copyright__ = '%s, %s' % (RELEASE_DATE[0:3], AUTHORS[0])
+__copyright__ = '%s, %s' % (LAST_UPDATE[0:3], AUTHORS[0])
 
 import os
 
@@ -17,7 +18,7 @@ except ImportError:
 
 required = [
         'requests>=1.0.0', 'impacket>=0.9.0', 'slackclient', 'progressbar',
-        'zlib', 'numpy', 'Pillow', 'pytube3', 'hashlib', 'urllib2', 'PyCrypto',
+        'numpy', 'Pillow', 'pytube3', 'hashlib', 'urllib2', 'PyCrypto',
         'base58', 'names', 'Faker', 'luhn'
         ]
 
